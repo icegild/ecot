@@ -1,0 +1,112 @@
+[gd_resource type="SpriteFrames" format=3 uid="uid://dxna227w1t7j7"]
+
+[ext_resource type="Texture2D" uid="uid://byxqhmxm3hvkx" path="res://assets/player/electricity/attack/Electricity1.png" id="1_8rcbj"]
+[ext_resource type="Texture2D" uid="uid://jr58lnfbnyyf" path="res://assets/player/electricity/attack/Electricity2.png" id="2_luqyh"]
+[ext_resource type="Texture2D" uid="uid://wbblefojy3iq" path="res://assets/player/electricity/attack/Electricity3.png" id="3_42isu"]
+[ext_resource type="Texture2D" uid="uid://cjkadpsxrh4rm" path="res://assets/player/electricity/attack/Electricity4.png" id="4_r2fb3"]
+[ext_resource type="Texture2D" uid="uid://d1n1j51cny855" path="res://assets/player/electricity/attack/Electricity5.png" id="5_b47yq"]
+[ext_resource type="Texture2D" uid="uid://bp002d1h5aseu" path="res://assets/player/electricity/attack/Electricity6.png" id="6_v1nis"]
+[ext_resource type="Texture2D" uid="uid://ccn8c0pyccwks" path="res://assets/player/electricity/attack/Electricity7.png" id="7_uoen1"]
+[ext_resource type="Texture2D" uid="uid://c56brtc88aok4" path="res://assets/player/electricity/attack/Electricity8.png" id="8_ybdd3"]
+[ext_resource type="Texture2D" uid="uid://boqmmaa3o24da" path="res://assets/player/electricity/attack/Electricity9.png" id="9_av2a2"]
+[ext_resource type="Texture2D" uid="uid://cdadfque0ts4i" path="res://assets/player/electricity/attack/Electricity10.png" id="10_3nd35"]
+[ext_resource type="Texture2D" uid="uid://dn0u2nogjypm2" path="res://assets/player/electricity/attack/Electricity11.png" id="11_h5kuf"]
+[ext_resource type="Texture2D" uid="uid://dnvi87vlw2m3o" path="res://assets/player/electricity/attack/Electricity12.png" id="12_rc135"]
+[ext_resource type="Texture2D" uid="uid://dejkxyeradc1s" path="res://assets/player/electricity/attack/Electricity13.png" id="13_u6atw"]
+[ext_resource type="Texture2D" uid="uid://cpu00opguswny" path="res://assets/player/electricity/idle/Electricity1.png" id="14_muk5e"]
+[ext_resource type="Texture2D" uid="uid://c7tksvl3dbhhn" path="res://assets/player/electricity/idle/Electricity2.png" id="15_mtd86"]
+[ext_resource type="Texture2D" uid="uid://cvjl7i7y7qu61" path="res://assets/player/electricity/idle/Electricity3.png" id="16_4fg1o"]
+[ext_resource type="Texture2D" uid="uid://cdxif5o832lhg" path="res://assets/player/electricity/idle/Electricity4.png" id="17_1pc3x"]
+[ext_resource type="Texture2D" uid="uid://cwigue7hp7hgv" path="res://assets/player/electricity/walk/Electricity1.png" id="18_yf1up"]
+[ext_resource type="Texture2D" uid="uid://bld8wcuuamykm" path="res://assets/player/electricity/walk/Electricity2.png" id="19_7v5kn"]
+[ext_resource type="Texture2D" uid="uid://bcieily5jgc8b" path="res://assets/player/electricity/walk/Electricity3.png" id="20_r15yl"]
+[ext_resource type="Texture2D" uid="uid://e5t2dbrm4kvs" path="res://assets/player/electricity/walk/Electricity4.png" id="21_nx3kl"]
+[ext_resource type="Texture2D" uid="uid://cvfcok1uqwc2h" path="res://assets/player/electricity/walk/Electricity5.png" id="22_mvxa1"]
+[ext_resource type="Texture2D" uid="uid://bpbmoqrhqueo8" path="res://assets/player/electricity/walk/Electricity6.png" id="23_4hxs8"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_8rcbj")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_luqyh")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_42isu")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_r2fb3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_b47yq")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_v1nis")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_uoen1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_ybdd3")
+}, {
+"duration": 1.0,
+"texture": ExtResource("9_av2a2")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_3nd35")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_h5kuf")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_rc135")
+}, {
+"duration": 1.0,
+"texture": ExtResource("13_u6atw")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 11.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_muk5e")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_mtd86")
+}, {
+"duration": 1.0,
+"texture": ExtResource("16_4fg1o")
+}, {
+"duration": 1.0,
+"texture": ExtResource("17_1pc3x")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_yf1up")
+}, {
+"duration": 1.0,
+"texture": ExtResource("19_7v5kn")
+}, {
+"duration": 1.0,
+"texture": ExtResource("20_r15yl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("21_nx3kl")
+}, {
+"duration": 1.0,
+"texture": ExtResource("22_mvxa1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("23_4hxs8")
+}],
+"loop": true,
+"name": &"walk",
+"speed": 11.0
+}]
