@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://clw24jsv5iblm"]
+
+[ext_resource type="Script" uid="uid://dqtbqtffyxjks" path="res://scripts/player_walk.gd" id="1_jvmh5"]
+[ext_resource type="Script" uid="uid://6gq84ps7vg3j" path="res://scripts/player_skin_cmpnnt.gd" id="1_o5ph0"]
+[ext_resource type="SpriteFrames" uid="uid://hklanvpkynih" path="res://animations/blood.tres" id="2_o5ph0"]
+[ext_resource type="Script" uid="uid://ctwp6s5gdkmeh" path="res://scripts/player_stats_cmpnnt.gd" id="4_1txc5"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_egtl6"]
+radius = 35.0
+height = 172.0
+
+[node name="CharacterBody2D" type="CharacterBody2D" unique_id=248031688]
+script = ExtResource("1_jvmh5")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=918817900]
+position = Vector2(7, 1)
+shape = SubResource("CapsuleShape2D_egtl6")
+
+[node name="PlayerSkinComponent" type="Node2D" parent="." unique_id=947904904]
+script = ExtResource("1_o5ph0")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="PlayerSkinComponent" unique_id=2133707045]
+sprite_frames = ExtResource("2_o5ph0")
+animation = &"attack"
+
+[node name="HealthAndEnergyComponent" type="Node2D" parent="." unique_id=1012060053]
+script = ExtResource("4_1txc5")
