@@ -3,3 +3,4 @@
 /android/
 .idea/vcs.xml
 *.tmp
+scenes/test.tscn

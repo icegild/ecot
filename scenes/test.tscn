@@ -1,17 +1,17 @@
 [gd_scene format=3 uid="uid://gevbnl2lf7ct"]
 
-[ext_resource type="PackedScene" uid="uid://clw24jsv5iblm" path="res://prefabs/player/skins/blood.tscn" id="1_bl13t"]
-[ext_resource type="Texture2D" uid="uid://b17l7lu1uqx3u" path="res://gradient-from-ronio.ir.png" id="2_bl13t"]
+[ext_resource type="PackedScene" uid="uid://clw24jsv5iblm" path="res://prefabs/player.tscn" id="1_bl13t"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_74lek"]
-size = Vector2(1164, 14)
+size = Vector2(2575, 14)
 
 [node name="Test" type="Node2D" unique_id=296746389]
+position = Vector2(-12, 314)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1993336629]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=1800785998]
-position = Vector2(582, 637)
+position = Vector2(1287.5, 637)
 shape = SubResource("RectangleShape2D_74lek")
 
 [node name="Blood" parent="." unique_id=109563253 instance=ExtResource("1_bl13t")]
@@ -20,4 +20,3 @@ position = Vector2(41, 537)
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=714052529]
 position = Vector2(600.00006, 262)
 scale = Vector2(0.57470703, 0.055175792)
-texture = ExtResource("2_bl13t")

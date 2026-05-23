@@ -14,6 +14,7 @@ config/name="ecot"
 run/main_scene="uid://gevbnl2lf7ct"
 config/features=PackedStringArray("4.6", "Forward Plus")
 boot_splash/show_image=false
+boot_splash/image="uid://dqwwsmjotexx1"
 config/icon="res://icon.svg"
 
 [display]
