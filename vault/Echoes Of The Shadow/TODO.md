@@ -42,4 +42,31 @@ Up to 2026-05-25
 	- [x] Layer 2 Tiles
 	- [x] Layer 3 Tiles
 	- [ ] Layer 4 Tiles
+	
+- ==Attacks==
+	- [ ] Design Attack Projectiles
 
+
+
+
+
+
+
+
+```chronos
+@ [2026-06-01~2026-09-01] Project Deadline
+
+- [2026-06-02] #red Hard1
+- [2026-06-09] #red Hard2
+- [2026-06-16] #red Hard3
+- [2026-06-23] #red Hard4
+- [2026-06-30] #red Hard5
+- [2026-07-07] #red Hard6
+- [2026-07-14] Normal1
+- [2026-07-21] Normal2
+- [2026-07-28] Normal3
+- [2026-08-04] Normal4
+- [2026-08-11] #red Hard7
+- [2026-08-18] #green Debug1
+- [2026-08-25] #green Debug2
+```

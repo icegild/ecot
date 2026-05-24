@@ -20,6 +20,16 @@
               "icon": "lucide-file",
               "title": "TODO"
             }
+          },
+          {
+            "id": "e7aee53bd065195c",
+            "type": "leaf",
+            "state": {
+              "type": "chronos-changelog-view",
+              "state": {},
+              "icon": "info",
+              "title": "What's New in Chronos Timeline"
+            }
           }
         ]
       }
@@ -115,7 +125,7 @@
               "state": {
                 "file": "TODO.md",
                 "linksCollapsed": false,
-                "unlinkedCollapsed": true
+                "unlinkedCollapsed": false
               },
               "icon": "links-going-out",
               "title": "Outgoing links from TODO"
@@ -165,12 +175,12 @@
               "title": "Outline of TODO"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 346.5
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -181,15 +191,21 @@
       "templates:Insert template": false,
       "command-palette:Open command palette": false,
       "audio-recorder:Start/stop recording": false,
-      "bases:Create new base": false
+      "bases:Create new base": false,
+      "meld-encrypt:New encrypted note": false,
+      "meld-encrypt:Lock and Close all open encrypted notes": false,
+      "meld-encrypt:Convert to or from an Encrypted note": false,
+      "meld-encrypt:Encrypt Selection": false,
+      "meld-encrypt:Decrypt at Cursor": false,
+      "iconic:Open rulebook": false
     }
   },
   "active": "1e4b420843177f4a",
   "lastOpenFiles": [
     "Echoes Of The Shadow.md",
     "CDF/CharacterAnimationComponent.md",
-    "CDF/HealthAndEnergyComponent.md",
     "TODO.md",
+    "CDF/HealthAndEnergyComponent.md",
     "CDF",
     "Untitled.base",
     "Untitled.canvas",
