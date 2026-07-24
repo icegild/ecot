@@ -8,13 +8,13 @@
         "type": "tabs",
         "children": [
           {
-            "id": "1e4b420843177f4a",
+            "id": "5096d1792e318555",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "TODO.md",
-                "mode": "source",
+                "mode": "preview",
                 "source": false
               },
               "icon": "lucide-file",
@@ -22,16 +22,77 @@
             }
           },
           {
-            "id": "e7aee53bd065195c",
+            "id": "3dcf124a3622e1e7",
             "type": "leaf",
             "state": {
-              "type": "chronos-changelog-view",
-              "state": {},
-              "icon": "info",
-              "title": "What's New in Chronos Timeline"
+              "type": "markdown",
+              "state": {
+                "file": "TOTAL BRAINSTORM.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "TOTAL BRAINSTORM"
+            }
+          },
+          {
+            "id": "b639f4ba57ac1580",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Untitled.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Untitled"
+            }
+          },
+          {
+            "id": "e3772da5dcdccaae",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Echoes Of The Shadow.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Echoes Of The Shadow"
+            }
+          },
+          {
+            "id": "7cbc6370c87e1c8b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CDF/CharacterAnimationComponent.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "CharacterAnimationComponent"
+            }
+          },
+          {
+            "id": "71a415080294f723",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "CDF/HealthAndEnergyComponent.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "HealthAndEnergyComponent"
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "vertical"
@@ -166,13 +227,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "TODO.md",
+                "file": "Echoes Of The Shadow.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of TODO"
+              "title": "Outline of Echoes Of The Shadow"
             }
           }
         ],
@@ -180,7 +241,8 @@
       }
     ],
     "direction": "horizontal",
-    "width": 346.5
+    "width": 346.5,
+    "collapsed": true
   },
   "left-ribbon": {
     "hiddenItems": {
@@ -200,12 +262,14 @@
       "iconic:Open rulebook": false
     }
   },
-  "active": "1e4b420843177f4a",
+  "active": "b639f4ba57ac1580",
   "lastOpenFiles": [
-    "Echoes Of The Shadow.md",
-    "CDF/CharacterAnimationComponent.md",
+    "TOTAL BRAINSTORM.md",
+    "Untitled.md",
     "TODO.md",
+    "CDF/CharacterAnimationComponent.md",
     "CDF/HealthAndEnergyComponent.md",
+    "Echoes Of The Shadow.md",
     "CDF",
     "Untitled.base",
     "Untitled.canvas",
