@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://gevbnl2lf7ct"]
 
 [ext_resource type="PackedScene" uid="uid://clw24jsv5iblm" path="res://prefabs/player.tscn" id="1_bl13t"]
+[ext_resource type="Script" uid="uid://cjw5qucpmhroh" path="res://scenes/SkinMenu.gd" id="2_bl13t"]
+[ext_resource type="Script" uid="uid://smdc16n5idav" path="res://scenes/SkinWheel.gd" id="3_iyx0m"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_74lek"]
 size = Vector2(2575, 14)
@@ -20,3 +22,51 @@ position = Vector2(41, 537)
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=714052529]
 position = Vector2(600.00006, 262)
 scale = Vector2(0.57470703, 0.055175792)
+
+[node name="SkinMenu" type="CanvasLayer" parent="." unique_id=1542118467]
+script = ExtResource("2_bl13t")
+
+[node name="SkinWheel" type="Control" parent="SkinMenu" unique_id=892411017]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("3_iyx0m")
+
+[node name="BloodIcon" type="TextureRect" parent="SkinMenu/SkinWheel" unique_id=187192055]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="DarkIcon" type="TextureRect" parent="SkinMenu/SkinWheel" unique_id=1306925211]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ElectricityIcon" type="TextureRect" parent="SkinMenu/SkinWheel" unique_id=826085338]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="FairyIcon" type="TextureRect" parent="SkinMenu/SkinWheel" unique_id=1498249941]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="MoonIcon" type="TextureRect" parent="SkinMenu/SkinWheel" unique_id=785337464]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ShellIcon" type="TextureRect" parent="SkinMenu/SkinWheel" unique_id=174987902]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="TimeIcon" type="TextureRect" parent="SkinMenu/SkinWheel" unique_id=330140516]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VineIcon" type="TextureRect" parent="SkinMenu/SkinWheel" unique_id=2000778395]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
