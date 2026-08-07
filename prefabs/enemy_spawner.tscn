@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://s88mhq07o2dk"]
+
+[ext_resource type="Script" uid="uid://b3ddf1o8qaown" path="res://prefabs/EnemySpawner.gd" id="1_ksrlw"]
+[ext_resource type="PackedScene" uid="uid://boohwrgtiib1f" path="res://prefabs/enemy.tscn" id="2_6rej7"]
+
+[node name="EnemySpawner" type="Node2D" unique_id=2120283021]
+script = ExtResource("1_ksrlw")
+enemy_scene = ExtResource("2_6rej7")
+max_enemies = 12
+max_spawn_distance = 500.0

@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://boohwrgtiib1f"]
+
+[ext_resource type="Script" uid="uid://to3fetx7d13b" path="res://prefabs/Enemy.gd" id="1_6n8dw"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_lo4qf"]
+radius = 20.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vm0n7"]
+radius = 25.0
+
+[node name="Enemy" type="CharacterBody2D" unique_id=920910368]
+collision_layer = 4
+script = ExtResource("1_6n8dw")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=389900187]
+shape = SubResource("CircleShape2D_lo4qf")
+
+[node name="HitboxArea" type="Area2D" parent="." unique_id=1211994864]
+collision_layer = 0
+collision_mask = 2
+
+[node name="HitboxShape" type="CollisionShape2D" parent="HitboxArea" unique_id=119546765]
+shape = SubResource("CircleShape2D_vm0n7")
