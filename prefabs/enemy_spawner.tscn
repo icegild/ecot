@@ -6,5 +6,5 @@
 [node name="EnemySpawner" type="Node2D" unique_id=2120283021]
 script = ExtResource("1_ksrlw")
 enemy_scene = ExtResource("2_6rej7")
-max_enemies = 12
+max_enemies = 4
 max_spawn_distance = 500.0
