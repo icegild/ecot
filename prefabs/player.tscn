@@ -25,4 +25,10 @@ sprite_frames = ExtResource("2_o5ph0")
 animation = &"attack"
 
 [node name="HealthAndEnergyComponent" type="Node2D" parent="." unique_id=1012060053]
+visible = false
 script = ExtResource("4_1txc5")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2125328862]
+limit_left = 0
+limit_smoothed = true
+position_smoothing_enabled = true
