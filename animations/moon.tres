@@ -14,12 +14,12 @@
 [ext_resource type="Texture2D" uid="uid://cehcqaekbpj1j" path="res://assets/player/moon/idle/Moon6.png" id="12_4g6w0"]
 [ext_resource type="Texture2D" uid="uid://dcb3hto68g2d2" path="res://assets/player/moon/idle/Moon7.png" id="13_rkmo5"]
 [ext_resource type="Texture2D" uid="uid://bcwcw1rd6hnhq" path="res://assets/player/moon/idle/Moon8.png" id="14_2kavk"]
-[ext_resource type="Texture2D" uid="uid://dtg4q5xhay8ex" path="res://assets/player/moon/walk/Vine.1.png" id="15_w31wa"]
-[ext_resource type="Texture2D" uid="uid://dtf7u3am4doy2" path="res://assets/player/moon/walk/Vine.2.png" id="16_si2pk"]
-[ext_resource type="Texture2D" uid="uid://b8e7wivkhomj8" path="res://assets/player/moon/walk/Vine.3.png" id="17_hd2c4"]
-[ext_resource type="Texture2D" uid="uid://bbbppkj6afn3x" path="res://assets/player/moon/walk/Vine.4.png" id="18_6lwvq"]
-[ext_resource type="Texture2D" uid="uid://k1iqqx4xaq5b" path="res://assets/player/moon/walk/Vine.5.png" id="19_sjoup"]
-[ext_resource type="Texture2D" uid="uid://71lhm0vbn6qk" path="res://assets/player/moon/walk/Vine.6.png" id="20_ilctg"]
+[ext_resource type="Texture2D" uid="uid://dtg4q5xhay8ex" path="res://assets/player/moon/walk/Moon1.png" id="15_w31wa"]
+[ext_resource type="Texture2D" uid="uid://dtf7u3am4doy2" path="res://assets/player/moon/walk/Moon2.png" id="16_si2pk"]
+[ext_resource type="Texture2D" uid="uid://b8e7wivkhomj8" path="res://assets/player/moon/walk/Moon3.png" id="17_hd2c4"]
+[ext_resource type="Texture2D" uid="uid://bbbppkj6afn3x" path="res://assets/player/moon/walk/Moon4.png" id="18_6lwvq"]
+[ext_resource type="Texture2D" uid="uid://k1iqqx4xaq5b" path="res://assets/player/moon/walk/Moon5.png" id="19_sjoup"]
+[ext_resource type="Texture2D" uid="uid://71lhm0vbn6qk" path="res://assets/player/moon/walk/Moon6.png" id="20_ilctg"]
 
 [resource]
 animations = [{

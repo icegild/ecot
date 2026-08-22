@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://clw24jsv5iblm"]
 
 [ext_resource type="Script" uid="uid://dqtbqtffyxjks" path="res://scripts/player_walk.gd" id="1_jvmh5"]
-[ext_resource type="Script" uid="uid://6gq84ps7vg3j" path="res://scripts/player_skin_cmpnnt.gd" id="1_o5ph0"]
+[ext_resource type="Script" uid="uid://6gq84ps7vg3j" path="res://scripts/player_skin_component.gd" id="1_o5ph0"]
 [ext_resource type="SpriteFrames" uid="uid://hklanvpkynih" path="res://animations/blood.tres" id="2_o5ph0"]
 [ext_resource type="Script" uid="uid://ctwp6s5gdkmeh" path="res://scripts/player_stats_component.gd" id="4_1txc5"]
 [ext_resource type="Script" uid="uid://cb8gr0o3uq1g1" path="res://prefabs/Camera2D.gd" id="5_ht1c8"]
