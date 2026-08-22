@@ -29,6 +29,15 @@ const ATTACK_COOLDOWN: float = 0.5
 var attack_timer: float = 0.0
 
 
+# ── Melee slash (X key) ──────────────────────────────────────────
+
+var is_meleeing: bool = false
+var melee_damage: float = 15.0
+const MELEE_DURATION: float = 0.25
+const MELEE_COOLDOWN: float = 0.35
+var melee_timer: float = 0.0
+
+
 # ── State ──────────────────────────────────────────────────────────
 
 var is_dead: bool = false
@@ -84,6 +93,12 @@ func _physics_process(delta: float) -> void:
                 if attack_timer <= 0.0:
                         is_attacking = false
 
+        # Tick melee cooldown
+        if melee_timer > 0.0:
+                melee_timer -= delta
+                if melee_timer <= 0.0:
+                        is_meleeing = false
+
         # Tick knockback
         if knockback_timer > 0.0:
                 knockback_timer -= delta
@@ -108,6 +123,10 @@ func _physics_process(delta: float) -> void:
         if Input.is_action_just_pressed("attack") and not is_attacking and attack_timer <= 0.0:
                 _perform_attack()
 
+        # Handle Melee Slash (X key).
+        if Input.is_action_just_pressed("melee") and not is_meleeing and melee_timer <= 0.0 and not is_attacking:
+                _perform_melee()
+
         # Get the input direction and handle the movement/deceleration.
         var direction := Input.get_axis("ui_left", "ui_right")
 
@@ -120,19 +139,19 @@ func _physics_process(delta: float) -> void:
                         elif direction < 0:
                                 sprite.flip_h = true
 
-        # Handle movement and animations (skip during attack)
+        # Handle movement and animations (skip during attack/melee)
         if direction:
                 velocity.x = direction * SPEED
-                if animation_component and not is_attacking:
+                if animation_component and not is_attacking and not is_meleeing:
                         animation_component.play_animation("walk")
         else:
                 velocity.x = move_toward(velocity.x, 0, SPEED)
                 if velocity.x == 0:
-                        if animation_component and not is_attacking:
+                        if animation_component and not is_attacking and not is_meleeing:
                                 animation_component.play_animation("idle")
 
         # Handle jump animation
-        if not is_on_floor() and animation_component and not is_attacking:
+        if not is_on_floor() and animation_component and not is_attacking and not is_meleeing:
                 animation_component.play_animation("jump")
 
         move_and_slide()
@@ -168,6 +187,56 @@ func _perform_attack() -> void:
                                 var dir_to_target = signf(body.global_position.x - global_position.x)
                                 if dir_to_target == facing or absf(body.global_position.x - global_position.x) < 40.0:
                                         body.take_damage(attack_damage, self)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  MELEE  (X key — close-range slash with skin-colored VFX)
+# ═══════════════════════════════════════════════════════════════════════
+
+func _perform_melee() -> void:
+        is_meleeing = true
+        melee_timer = MELEE_DURATION + MELEE_COOLDOWN
+
+        # Determine facing direction
+        var facing: float = 1.0
+        if animation_component:
+                var sprite = animation_component.get_animated_sprite()
+                if sprite and sprite.flip_h:
+                        facing = -1.0
+
+        # Spawn the visual slash effect
+        var skin_name: String = "blood"
+        if animation_component:
+                skin_name = animation_component.get_current_character()
+        var slash = preload("res://scripts/MeleeSlash.gd").new(facing, skin_name)
+        add_child(slash)
+
+        # Damage enemies in melee range (smaller than F-attack)
+        var melee_area := _get_melee_overlap(facing)
+        for body in melee_area:
+                if body == self:
+                        continue
+                if body.has_method("take_damage"):
+                        var dir_to_target = signf(body.global_position.x - global_position.x)
+                        if dir_to_target == facing or absf(body.global_position.x - global_position.x) < 50.0:
+                                body.take_damage(melee_damage, self)
+
+
+func _get_melee_overlap(facing: float) -> Array:
+        # Use a direct space-state shape cast for precise melee hitbox
+        var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+        var query := PhysicsShapeQueryParameters2D.new()
+        var shape := CircleShape2D.new()
+        shape.radius = 45.0
+        query.shape = shape
+        query.transform = Transform2D(0.0, global_position + Vector2(facing * 30.0, -10.0))
+        query.collision_mask = 4  # enemy layer
+        var results = space_state.intersect_shape(query)
+        var bodies: Array = []
+        for r: Dictionary in results:
+                if r.has("collider") and r["collider"] is Node2D:
+                        bodies.append(r["collider"])
+        return bodies
 
 
 # ═══════════════════════════════════════════════════════════════════════
