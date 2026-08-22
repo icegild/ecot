@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://c0tos74i25iwv"
-path="res://.godot/imported/Vine6.png-80fe7eee057a8d72c37f8db49f086e3b.ctex"
+path="res://.godot/imported/Blood6.png-b128e7afde207996dc445907c1e3a883.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/player/blood/walk/Vine6.png"
-dest_files=["res://.godot/imported/Vine6.png-80fe7eee057a8d72c37f8db49f086e3b.ctex"]
+source_file="res://assets/player/blood/walk/Blood6.png"
+dest_files=["res://.godot/imported/Blood6.png-b128e7afde207996dc445907c1e3a883.ctex"]
 
 [params]
 

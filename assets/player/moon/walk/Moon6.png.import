@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://71lhm0vbn6qk"
-path="res://.godot/imported/Vine.6.png-f0790a99cf227279c8aaeaa07b15671a.ctex"
+path="res://.godot/imported/Moon6.png-33a13fedd041fdb11823bbbf6eb46b31.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/player/moon/walk/Vine.6.png"
-dest_files=["res://.godot/imported/Vine.6.png-f0790a99cf227279c8aaeaa07b15671a.ctex"]
+source_file="res://assets/player/moon/walk/Moon6.png"
+dest_files=["res://.godot/imported/Moon6.png-33a13fedd041fdb11823bbbf6eb46b31.ctex"]
 
 [params]
 
