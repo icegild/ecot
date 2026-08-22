@@ -48,7 +48,7 @@ func _ready() -> void:
 
 ## Spawns a small dust puff (landing, skidding).
 static func spawn_dust(pos: Vector2, count: int = 6) -> void:
-        var ctrl: VFXController = _get()
+        var ctrl: VFXController = _get_controller()
         if not ctrl or not ctrl._dust_tex:
                 return
         var particles := _make_particles(
@@ -71,7 +71,7 @@ static func spawn_dust(pos: Vector2, count: int = 6) -> void:
 
 ## Spawns running dust trail.
 static func spawn_run_dust(pos: Vector2, direction: float = 1.0) -> void:
-        var ctrl: VFXController = _get()
+        var ctrl: VFXController = _get_controller()
         if not ctrl or not ctrl._dust_light_tex:
                 return
         var particles := _make_particles(
@@ -98,7 +98,7 @@ static func spawn_run_dust(pos: Vector2, direction: float = 1.0) -> void:
 
 ## Spawns white/yellow spark burst when hitting an enemy.
 static func spawn_hit_spark(pos: Vector2, dir: float = 1.0) -> void:
-        var ctrl: VFXController = _get()
+        var ctrl: VFXController = _get_controller()
         if not ctrl:
                 return
         # White sparks
@@ -139,7 +139,7 @@ static func spawn_hit_spark(pos: Vector2, dir: float = 1.0) -> void:
 
 ## Spawns red sparks for damage indication.
 static func spawn_damage_spark(pos: Vector2) -> void:
-        var ctrl: VFXController = _get()
+        var ctrl: VFXController = _get_controller()
         if not ctrl:
                 return
         var p := _make_particles(
@@ -162,7 +162,7 @@ static func spawn_damage_spark(pos: Vector2) -> void:
 
 ## Spawns slash impact ring.
 static func spawn_slash_impact(pos: Vector2) -> void:
-        var ctrl: VFXController = _get()
+        var ctrl: VFXController = _get_controller()
         if not ctrl:
                 return
         var p := _make_particles(
@@ -189,7 +189,7 @@ static func spawn_slash_impact(pos: Vector2) -> void:
 
 ## Spawns a death burst at position with optional color tint.
 static func spawn_death_burst(pos: Vector2, tint: Color = Color.WHITE) -> void:
-        var ctrl: VFXController = _get()
+        var ctrl: VFXController = _get_controller()
         if not ctrl:
                 return
         # Main burst
@@ -234,7 +234,7 @@ static func spawn_death_burst(pos: Vector2, tint: Color = Color.WHITE) -> void:
 
 ## Spawns rising green cross particles.
 static func spawn_heal_effect(pos: Vector2) -> void:
-        var ctrl: VFXController = _get()
+        var ctrl: VFXController = _get_controller()
         if not ctrl:
                 return
         var p := _make_particles(
@@ -259,7 +259,7 @@ static func spawn_heal_effect(pos: Vector2) -> void:
 #  INTERNAL HELPERS
 # ═══════════════════════════════════════════════════════════════════════
 
-static func _get() -> VFXController:
+static func _get_controller() -> VFXController:
         var tree := Engine.get_main_loop() as SceneTree
         if not tree:
                 return null

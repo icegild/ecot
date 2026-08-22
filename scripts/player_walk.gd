@@ -244,8 +244,8 @@ func _perform_melee() -> void:
                         var dir_to_target = signf(body.global_position.x - global_position.x)
                         if dir_to_target == facing or absf(body.global_position.x - global_position.x) < 80.0:
                                 body.take_damage(melee_damage, self)
-                                        VFXController.spawn_hit_spark(body.global_position, facing)
-                                        VFXController.spawn_slash_impact((global_position + body.global_position) / 2.0)
+                                VFXController.spawn_hit_spark(body.global_position, facing)
+                                VFXController.spawn_slash_impact((global_position + body.global_position) / 2.0)
 
 
 func _get_melee_overlap(facing: float) -> Array:
