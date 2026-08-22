@@ -79,3 +79,7 @@ melee={
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+
+[autoload]
+
+VFXController="*res://scripts/VFXController.gd"

@@ -274,6 +274,7 @@ func _die() -> void:
         is_dead = true
         current_state = State.DEAD
         enemy_died.emit(self)
+        VFXController.spawn_death_burst(global_position, enemy_color)
         var tween: Tween = create_tween()
         tween.tween_property(self, "scale", Vector2.ZERO, 0.3)
         tween.tween_property(self, "modulate.a", 0.0, 0.3)

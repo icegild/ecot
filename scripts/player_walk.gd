@@ -41,6 +41,9 @@ var melee_timer: float = 0.0
 # ── State ──────────────────────────────────────────────────────────
 
 var is_dead: bool = false
+var was_on_floor: bool = true
+var run_dust_timer: float = 0.0
+const RUN_DUST_INTERVAL: float = 0.12
 
 
 # ── Knockback ────────────────────────────────────────────────────
@@ -110,6 +113,21 @@ func _physics_process(delta: float) -> void:
                         velocity.y += gravity * delta
                         move_and_slide()
                         return
+
+        # Dust on landing
+        if is_on_floor() and not was_on_floor:
+                VFXController.spawn_dust(global_position + Vector2(0, 10))
+        was_on_floor = is_on_floor()
+
+        # Running dust trail
+        if is_on_floor() and absf(velocity.x) > 100.0:
+                run_dust_timer -= delta
+                if run_dust_timer <= 0.0:
+                        var dust_dir: float = signf(velocity.x)
+                        VFXController.spawn_run_dust(global_position + Vector2(-dust_dir * 5, 5), dust_dir)
+                        run_dust_timer = RUN_DUST_INTERVAL
+        else:
+                run_dust_timer = 0.0
 
         # Add the gravity.
         if not is_on_floor():
@@ -187,6 +205,7 @@ func _perform_attack() -> void:
                                 var dir_to_target = signf(body.global_position.x - global_position.x)
                                 if dir_to_target == facing or absf(body.global_position.x - global_position.x) < 40.0:
                                         body.take_damage(attack_damage, self)
+                                        VFXController.spawn_hit_spark(body.global_position, facing)
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -225,6 +244,8 @@ func _perform_melee() -> void:
                         var dir_to_target = signf(body.global_position.x - global_position.x)
                         if dir_to_target == facing or absf(body.global_position.x - global_position.x) < 80.0:
                                 body.take_damage(melee_damage, self)
+                                        VFXController.spawn_hit_spark(body.global_position, facing)
+                                        VFXController.spawn_slash_impact((global_position + body.global_position) / 2.0)
 
 
 func _get_melee_overlap(facing: float) -> Array:
@@ -261,6 +282,7 @@ func _on_damage_taken(amount: float, source: Node) -> void:
         modulate = Color(2.0, 0.5, 0.5)
         var tween := create_tween()
         tween.tween_property(self, "modulate", Color.WHITE, 0.2)
+        VFXController.spawn_damage_spark(global_position)
 
 
 func _on_health_depleted() -> void:
