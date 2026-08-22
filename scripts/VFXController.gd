@@ -9,11 +9,9 @@ extends Node
 #    VFXController.spawn_dust(position)
 #    VFXController.spawn_hit_spark(position, direction)
 #    VFXController.spawn_death_burst(position, color)
-#    VFXController.spawn_slash_impact(position)
 #    VFXController.spawn_heal_effect(position)
 #
 # ─────────────────────────────────────────────────────────────────────
-
 
 # ── Preloaded textures ─────────────────────────────────────────────
 
@@ -25,9 +23,7 @@ var _spark_red_tex: Texture2D
 var _death_burst_tex: Texture2D
 var _death_burst_dark_tex: Texture2D
 var _heal_tex: Texture2D
-var _impact_ring_tex: Texture2D
 var _circle_energy_tex: Texture2D
-
 
 func _ready() -> void:
         _dust_tex = preload("res://assets/vfx/particles/dust.png")
@@ -38,9 +34,7 @@ func _ready() -> void:
         _death_burst_tex = preload("res://assets/vfx/particles/death_burst.png")
         _death_burst_dark_tex = preload("res://assets/vfx/particles/death_burst_dark.png")
         _heal_tex = preload("res://assets/vfx/particles/heal.png")
-        _impact_ring_tex = preload("res://assets/vfx/particles/impact_ring.png")
         _circle_energy_tex = preload("res://assets/vfx/particles/circle_energy.png")
-
 
 # ═══════════════════════════════════════════════════════════════════════
 #  DUST  –  landing, running, wall-slide
@@ -68,7 +62,6 @@ static func spawn_dust(pos: Vector2, count: int = 6) -> void:
         )
         _add_to_scene(particles)
 
-
 ## Spawns running dust trail.
 static func spawn_run_dust(pos: Vector2, direction: float = 1.0) -> void:
         var ctrl: VFXController = _get_controller()
@@ -90,7 +83,6 @@ static func spawn_run_dust(pos: Vector2, direction: float = 1.0) -> void:
                 }
         )
         _add_to_scene(particles)
-
 
 # ═══════════════════════════════════════════════════════════════════════
 #  HIT SPARKS  –  enemy hit, slash impact
@@ -136,7 +128,6 @@ static func spawn_hit_spark(pos: Vector2, dir: float = 1.0) -> void:
         )
         _add_to_scene(p2)
 
-
 ## Spawns red sparks for damage indication.
 static func spawn_damage_spark(pos: Vector2) -> void:
         var ctrl: VFXController = _get_controller()
@@ -158,30 +149,6 @@ static func spawn_damage_spark(pos: Vector2) -> void:
                 }
         )
         _add_to_scene(p)
-
-
-## Spawns slash impact ring.
-static func spawn_slash_impact(pos: Vector2) -> void:
-        var ctrl: VFXController = _get_controller()
-        if not ctrl:
-                return
-        var p := _make_particles(
-                pos, ctrl._impact_ring_tex, 3,
-                {
-                        "direction": Vector2(0.0, 0.0),
-                        "spread": Vector2(0.0, 0.0),
-                        "gravity": Vector2(0, 0),
-                        "initial_velocity_min": 0.0,
-                        "initial_velocity_max": 0.0,
-                        "scale_min": 0.8,
-                        "scale_max": 1.5,
-                        "lifetime": 0.2,
-                        "lifetime_randomness": 0.1,
-                        "color": Color(1.0, 1.0, 1.0, 0.7),
-                }
-        )
-        _add_to_scene(p)
-
 
 # ═══════════════════════════════════════════════════════════════════════
 #  DEATH BURST  –  enemy death
@@ -227,7 +194,6 @@ static func spawn_death_burst(pos: Vector2, tint: Color = Color.WHITE) -> void:
         )
         _add_to_scene(p2)
 
-
 # ═══════════════════════════════════════════════════════════════════════
 #  HEAL  –  player heal effect
 # ═══════════════════════════════════════════════════════════════════════
@@ -254,7 +220,6 @@ static func spawn_heal_effect(pos: Vector2) -> void:
         )
         _add_to_scene(p)
 
-
 # ═══════════════════════════════════════════════════════════════════════
 #  INTERNAL HELPERS
 # ═══════════════════════════════════════════════════════════════════════
@@ -267,7 +232,6 @@ static func _get_controller() -> VFXController:
                 if node is VFXController:
                         return node
         return null
-
 
 static func _make_particles(
                 pos: Vector2,
@@ -337,7 +301,6 @@ static func _make_particles(
 
         return particles
 
-
 static func _make_color_ramp(base_color: Color) -> GradientTexture1D:
         var gradient := Gradient.new()
         gradient.colors = PackedColorArray([
@@ -349,7 +312,6 @@ static func _make_color_ramp(base_color: Color) -> GradientTexture1D:
         tex.gradient = gradient
         tex.width = 4
         return tex
-
 
 static func _add_to_scene(particles: GPUParticles2D) -> void:
         var tree := Engine.get_main_loop() as SceneTree
