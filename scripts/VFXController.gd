@@ -289,15 +289,22 @@ static func _make_particles(
 		# Z-index above most things but below UI
 		particles.z_index = 50
 
-		# ── Material ─────────────────────────────────────────────
-		var mat := ParticleProcessMaterial.new()
-		mat.particle_flag_align_y = false
-		mat.particle_flag_rotate_y = false
-		mat.direction = params.get("direction", Vector2(0, -1))
-		mat.spread = params.get("spread", Vector2(180, 180))
-		mat.gravity = Vector3(params.get("gravity", Vector2.ZERO).x, params.get("gravity", Vector2.ZERO).y, 0.0)
-		mat.scale_min = params.get("scale_min", 0.5)
-		mat.scale_max = params.get("scale_max", 1.5)
+        # ── Material ─────────────────────────────────────────────
+        var mat := ParticleProcessMaterial.new()
+        mat.particle_flag_align_y = false
+        mat.particle_flag_rotate_y = false
+
+        var dir2: Vector2 = params.get("direction", Vector2(0, -1))
+        mat.direction = Vector3(dir2.x, dir2.y, 0.0)
+
+        var sp: Vector2 = params.get("spread", Vector2(180, 180))
+        mat.spread = maxf(sp.x, sp.y)
+
+        var grav: Vector2 = params.get("gravity", Vector2.ZERO)
+        mat.gravity = Vector3(grav.x, grav.y, 0.0)
+
+        mat.scale_min = params.get("scale_min", 0.5)
+        mat.scale_max = params.get("scale_max", 1.5)
 
 		# Color
 		var col: Color = params.get("color", Color.WHITE)
@@ -311,9 +318,9 @@ static func _make_particles(
 		mat.emission_shape = ParticleProcessMaterial.EMISSION_SHAPE_SPHERE
 		mat.emission_sphere_radius = 5.0
 
-		# Velocity
-		mat.velocity_min = params.get("initial_velocity_min", 50.0)
-		mat.velocity_max = params.get("initial_velocity_max", 150.0)
+        # Speed
+        mat.speed_min = params.get("initial_velocity_min", 50.0)
+        mat.speed_max = params.get("initial_velocity_max", 150.0)
 
 		# Set lifetime
 		mat.lifetime = lt

@@ -88,7 +88,6 @@ func _build_ui() -> void:
                 rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
                 rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
                 rect.texture = heart_empty
-                rect.set_anchors_and_offsets_preset(Control.PRESET_KEEP_SIZE)
                 # Set size based on heart texture
                 if heart_empty:
                         var s = heart_empty.get_size() * heart_scale
@@ -110,7 +109,6 @@ func _build_ui() -> void:
                 rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
                 rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
                 rect.texture = energy_empty
-                rect.set_anchors_and_offsets_preset(Control.PRESET_KEEP_SIZE)
                 if energy_empty:
                         var s = energy_empty.get_size() * energy_scale
                         rect.custom_minimum_size = s
