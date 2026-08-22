@@ -204,6 +204,10 @@ func _find_player() -> void:
                 player_ref = players[0] as CharacterBody2D
                 if player_ref and player_ref.has_node("HealthAndEnergyComponent"):
                         stats_component = player_ref.get_node("HealthAndEnergyComponent")
+                        # Verify the component loaded properly
+                        if not stats_component is HealthAndEnergyComponent:
+                                push_error("[HUD] HealthAndEnergyComponent script failed to load")
+                                return
                         # Connect signals
                         if not stats_component.health_changed.is_connected(_update_hearts):
                                 stats_component.health_changed.connect(_update_hearts)
