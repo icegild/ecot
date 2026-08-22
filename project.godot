@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="ecot kk"
-run/main_scene="uid://gevbnl2lf7ct"
+run/main_scene="res://scenes/main_map.tscn"
 config/features=PackedStringArray("4.7", "Forward Plus")
 boot_splash/show_image=false
 boot_splash/image="uid://dqwwsmjotexx1"
