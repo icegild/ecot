@@ -12,7 +12,7 @@ extends CharacterBody2D
 #      ├── CollisionShape2D      ← CapsuleShape2D
 #      ├── HitboxArea (Area2D)   ← contact-damage detector (mask 2)
 #      │   └── HitboxShape (CollisionShape2D)
-#      └── HealthAndEnergyComponent  ← player_stats_component.gd
+#      └── HealthAndEnergyComponent  ← health_energy_component.gd
 #
 #  COLLISION LAYERS
 #    1 = world (ground / tiles)

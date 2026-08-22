@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://clw24jsv5iblm"]
 
-[ext_resource type="Script" uid="uid://dqtbqtffyxjks" path="res://scripts/player_walk.gd" id="1_jvmh5"]
-[ext_resource type="Script" uid="uid://6gq84ps7vg3j" path="res://scripts/player_skin_component.gd" id="1_o5ph0"]
+[ext_resource type="Script" path="res://scripts/player_controller.gd" id="1_jvmh5"]
+[ext_resource type="Script" path="res://scripts/character_animation_component.gd" id="1_o5ph0"]
 [ext_resource type="SpriteFrames" uid="uid://hklanvpkynih" path="res://animations/blood.tres" id="2_o5ph0"]
-[ext_resource type="Script" uid="uid://ctwp6s5gdkmeh" path="res://scripts/player_stats_component.gd" id="4_1txc5"]
-[ext_resource type="Script" uid="uid://cb8gr0o3uq1g1" path="res://prefabs/Camera2D.gd" id="5_ht1c8"]
+[ext_resource type="Script" path="res://scripts/health_energy_component.gd" id="4_1txc5"]
+[ext_resource type="Script" path="res://prefabs/Camera2D.gd" id="5_ht1c8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sxe7q"]
 size = Vector2(66, 188)
@@ -17,13 +17,11 @@ script = ExtResource("1_jvmh5")
 position = Vector2(3, -13)
 shape = SubResource("RectangleShape2D_sxe7q")
 
-[node name="VFXFeet" type="Marker2D" parent="." unique_id=248031700]
+[node name="VFXFeet" type="Marker2D" parent="."]
 position = Vector2(3, 81)
-gizmo_extents = Vector2(8, 8)
 
-[node name="VFXCenter" type="Marker2D" parent="." unique_id=248031701]
+[node name="VFXCenter" type="Marker2D" parent="."]
 position = Vector2(3, -13)
-gizmo_extents = Vector2(8, 8)
 
 [node name="PlayerSkinComponent" type="Node2D" parent="." unique_id=947904904]
 script = ExtResource("1_o5ph0")
