@@ -33,14 +33,7 @@ var tile_list = [
 var current_tile_index = 0
 
 func _ready():
-	print("=== TILE PLACEMENT CONTROLS ===")
-	print("1-9: Tiles 1-9")
-	print("0: Tile 10")
-	print("Q-P: Tiles 11-20")
-	print("A-G: Tiles 21-25")
-	print("Left Click: Place tile")
-	print("Right Click: Erase tile")
-	print("Current tile: 1")
+	pass
 
 func _input(event):
 	if event is InputEventKey and event.pressed:
@@ -56,7 +49,7 @@ func _input(event):
 			KEY_8: current_tile_index = 7
 			KEY_9: current_tile_index = 8
 			KEY_0: current_tile_index = 9
-			
+
 			# Letter keys for tiles 11-20
 			KEY_Q: current_tile_index = 10
 			KEY_W: current_tile_index = 11
@@ -68,20 +61,18 @@ func _input(event):
 			KEY_I: current_tile_index = 17
 			KEY_O: current_tile_index = 18
 			KEY_P: current_tile_index = 19
-			
+
 			# Letter keys for tiles 21-25
 			KEY_A: current_tile_index = 20
 			KEY_S: current_tile_index = 21
 			KEY_D: current_tile_index = 22
 			KEY_F: current_tile_index = 23
 			KEY_G: current_tile_index = 24
-		
-		print("Selected tile: ", current_tile_index + 1, " (atlas: ", tile_list[current_tile_index], ")")
-	
+
 	if event is InputEventMouseButton and event.pressed:
 		var mouse_pos = get_global_mouse_position()
 		var tile_pos = local_to_map(mouse_pos)
-		
+
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			set_cell(tile_pos, 0, tile_list[current_tile_index])
 		elif event.button_index == MOUSE_BUTTON_RIGHT:
