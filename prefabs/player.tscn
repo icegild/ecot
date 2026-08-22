@@ -17,6 +17,14 @@ script = ExtResource("1_jvmh5")
 position = Vector2(3, -13)
 shape = SubResource("RectangleShape2D_sxe7q")
 
+[node name="VFXFeet" type="Marker2D" parent="." unique_id=248031700]
+position = Vector2(3, 81)
+gizmo_extents = Vector2(8, 8)
+
+[node name="VFXCenter" type="Marker2D" parent="." unique_id=248031701]
+position = Vector2(3, -13)
+gizmo_extents = Vector2(8, 8)
+
 [node name="PlayerSkinComponent" type="Node2D" parent="." unique_id=947904904]
 script = ExtResource("1_o5ph0")
 

@@ -1,8 +1,9 @@
 extends CharacterBody2D
 
 # ─────────────────────────────────────────────────────────────────────
-#  player_walk.gd  –  Player movement, attack, health, and death
+#  player_controller.gd  –  Full player controller
 #  Godot 4.7  |  Extends CharacterBody2D (player group)
+#  Handles: movement, jump, attack, melee, knockback, health, death, VFX
 # ─────────────────────────────────────────────────────────────────────
 
 
@@ -12,9 +13,11 @@ const SPEED: float = 300.0
 const JUMP_VELOCITY: float = -550.0
 var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity")
 
-# Collision box: RectangleShape2D(66, 188) at offset (3, -13)
-# Shape center is at -13, half-height is 94 → feet at -13 + 94 = 81
-const FEET_OFFSET_Y: float = 81.0
+
+# ── VFX anchor points (Marker2D nodes in scene) ────────────────────
+
+@onready var vfx_feet: Marker2D = $VFXFeet
+@onready var vfx_center: Marker2D = $VFXCenter
 
 
 # ── Component references ──────────────────────────────────────────
@@ -64,119 +67,124 @@ const KNOCKBACK_FORCE_Y: float = -150.0
 # ═══════════════════════════════════════════════════════════════════════
 
 func _ready():
-        # Connect to character change signals
-        if animation_component:
-                animation_component.character_changed.connect(_on_character_changed)
-                animation_component.animation_played.connect(_on_animation_played)
+	# Connect to character change signals
+	if animation_component:
+		animation_component.character_changed.connect(_on_character_changed)
+		animation_component.animation_played.connect(_on_animation_played)
 
-        # Connect to health signals
-        if stats_component:
-                stats_component.health_depleted.connect(_on_health_depleted)
-                stats_component.damage_taken.connect(_on_damage_taken)
+	# Connect to health signals
+	if stats_component:
+		stats_component.health_depleted.connect(_on_health_depleted)
+		stats_component.damage_taken.connect(_on_damage_taken)
 
-        # Build the attack hitbox (Area2D with CircleShape2D)
-        # collision_mask = 4 detects enemies on layer 3
-        attack_area = Area2D.new()
-        attack_area.name = "AttackHitbox"
-        attack_area.collision_layer = 0
-        attack_area.collision_mask = 4  # enemy layer
+	# Build the attack hitbox (Area2D with CircleShape2D)
+	# collision_mask = 4 detects enemies on layer 3
+	attack_area = Area2D.new()
+	attack_area.name = "AttackHitbox"
+	attack_area.collision_layer = 0
+	attack_area.collision_mask = 4  # enemy layer
 
-        var attack_shape := CircleShape2D.new()
-        attack_shape.radius = 55.0
-        var col := CollisionShape2D.new()
-        col.shape = attack_shape
-        col.position = Vector2(35.0, -20.0)  # offset in front of player
-        attack_area.add_child(col)
-        add_child(attack_area)
+	var attack_shape := CircleShape2D.new()
+	attack_shape.radius = 55.0
+	var col := CollisionShape2D.new()
+	col.shape = attack_shape
+	col.position = Vector2(35.0, -20.0)  # offset in front of player
+	attack_area.add_child(col)
+	add_child(attack_area)
+
+	# Debug: print VFX anchor positions
+	if OS.is_debug_build():
+		print("[Player] VFXFeet local=", vfx_feet.position, " global=", vfx_feet.global_position)
+		print("[Player] VFXCenter local=", vfx_center.position, " global=", vfx_center.global_position)
 
 
 func _physics_process(delta: float) -> void:
-        if is_dead:
-                return
+	if is_dead:
+		return
 
-        # Tick attack cooldown
-        if attack_timer > 0.0:
-                attack_timer -= delta
-                if attack_timer <= 0.0:
-                        is_attacking = false
+	# Tick attack cooldown
+	if attack_timer > 0.0:
+		attack_timer -= delta
+		if attack_timer <= 0.0:
+			is_attacking = false
 
-        # Tick melee cooldown
-        if melee_timer > 0.0:
-                melee_timer -= delta
-                if melee_timer <= 0.0:
-                        is_meleeing = false
+	# Tick melee cooldown
+	if melee_timer > 0.0:
+		melee_timer -= delta
+		if melee_timer <= 0.0:
+			is_meleeing = false
 
-        # Tick knockback
-        if knockback_timer > 0.0:
-                knockback_timer -= delta
-                velocity.x = knockback_velocity.x
-                if is_on_floor() and knockback_velocity.y >= 0.0:
-                        knockback_timer = 0.0
-                        velocity.x = move_toward(velocity.x, 0, SPEED)
-                else:
-                        velocity.y += gravity * delta
-                        move_and_slide()
-                        return
+	# Tick knockback
+	if knockback_timer > 0.0:
+		knockback_timer -= delta
+		velocity.x = knockback_velocity.x
+		if is_on_floor() and knockback_velocity.y >= 0.0:
+			knockback_timer = 0.0
+			velocity.x = move_toward(velocity.x, 0, SPEED)
+		else:
+			velocity.y += gravity * delta
+			move_and_slide()
+			return
 
-        # Dust on landing (spawn at feet level)
-        if is_on_floor() and not was_on_floor:
-                VFXController.spawn_dust(global_position + Vector2(0, FEET_OFFSET_Y))
-        was_on_floor = is_on_floor()
+	# Dust on landing
+	if is_on_floor() and not was_on_floor:
+		VFXController.spawn_dust(vfx_feet.global_position)
+	was_on_floor = is_on_floor()
 
-        # Running dust trail (spawn at feet level)
-        if is_on_floor() and absf(velocity.x) > 100.0:
-                run_dust_timer -= delta
-                if run_dust_timer <= 0.0:
-                        var dust_dir: float = signf(velocity.x)
-                        VFXController.spawn_run_dust(global_position + Vector2(-dust_dir * 5, FEET_OFFSET_Y), dust_dir)
-                        run_dust_timer = RUN_DUST_INTERVAL
-        else:
-                run_dust_timer = 0.0
+	# Running dust trail
+	if is_on_floor() and absf(velocity.x) > 100.0:
+		run_dust_timer -= delta
+		if run_dust_timer <= 0.0:
+			var dust_dir: float = signf(velocity.x)
+			VFXController.spawn_run_dust(vfx_feet.global_position + Vector2(-dust_dir * 5, 0), dust_dir)
+			run_dust_timer = RUN_DUST_INTERVAL
+	else:
+		run_dust_timer = 0.0
 
-        # Add the gravity.
-        if not is_on_floor():
-                velocity.y += gravity * delta
+	# Add the gravity.
+	if not is_on_floor():
+		velocity.y += gravity * delta
 
-        # Handle Jump.
-        if Input.is_key_pressed(KEY_SPACE) and is_on_floor():
-                velocity.y = JUMP_VELOCITY
+	# Handle Jump.
+	if Input.is_key_pressed(KEY_SPACE) and is_on_floor():
+		velocity.y = JUMP_VELOCITY
 
-        # Handle Attack (F key).
-        if Input.is_action_just_pressed("attack") and not is_attacking and attack_timer <= 0.0:
-                _perform_attack()
+	# Handle Attack (F key).
+	if Input.is_action_just_pressed("attack") and not is_attacking and attack_timer <= 0.0:
+		_perform_attack()
 
-        # Handle Melee Slash (X key).
-        if Input.is_action_just_pressed("melee") and not is_meleeing and melee_timer <= 0.0 and not is_attacking:
-                _perform_melee()
+	# Handle Melee Slash (X key).
+	if Input.is_action_just_pressed("melee") and not is_meleeing and melee_timer <= 0.0 and not is_attacking:
+		_perform_melee()
 
-        # Get the input direction and handle the movement/deceleration.
-        var direction := Input.get_axis("ui_left", "ui_right")
+	# Get the input direction and handle the movement/deceleration.
+	var direction := Input.get_axis("ui_left", "ui_right")
 
-        # Handle sprite flipping based on direction
-        if animation_component:
-                var sprite = animation_component.get_animated_sprite()
-                if sprite:
-                        if direction > 0:
-                                sprite.flip_h = false
-                        elif direction < 0:
-                                sprite.flip_h = true
+	# Handle sprite flipping based on direction
+	if animation_component:
+		var sprite = animation_component.get_animated_sprite()
+		if sprite:
+			if direction > 0:
+				sprite.flip_h = false
+			elif direction < 0:
+				sprite.flip_h = true
 
-        # Handle movement and animations (skip during attack/melee)
-        if direction:
-                velocity.x = direction * SPEED
-                if animation_component and not is_attacking and not is_meleeing:
-                        animation_component.play_animation("walk")
-        else:
-                velocity.x = move_toward(velocity.x, 0, SPEED)
-                if velocity.x == 0:
-                        if animation_component and not is_attacking and not is_meleeing:
-                                animation_component.play_animation("idle")
+	# Handle movement and animations (skip during attack/melee)
+	if direction:
+		velocity.x = direction * SPEED
+		if animation_component and not is_attacking and not is_meleeing:
+			animation_component.play_animation("walk")
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
+		if velocity.x == 0:
+			if animation_component and not is_attacking and not is_meleeing:
+				animation_component.play_animation("idle")
 
-        # Handle jump animation
-        if not is_on_floor() and animation_component and not is_attacking and not is_meleeing:
-                animation_component.play_animation("jump")
+	# Handle jump animation
+	if not is_on_floor() and animation_component and not is_attacking and not is_meleeing:
+		animation_component.play_animation("jump")
 
-        move_and_slide()
+	move_and_slide()
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -184,32 +192,32 @@ func _physics_process(delta: float) -> void:
 # ═══════════════════════════════════════════════════════════════════════
 
 func _perform_attack() -> void:
-        is_attacking = true
-        attack_timer = ATTACK_DURATION + ATTACK_COOLDOWN
+	is_attacking = true
+	attack_timer = ATTACK_DURATION + ATTACK_COOLDOWN
 
-        # Play attack animation
-        if animation_component:
-                animation_component.play_animation("attack")
+	# Play attack animation
+	if animation_component:
+		animation_component.play_animation("attack")
 
-        # Determine facing direction
-        var facing: float = 1.0
-        if animation_component:
-                var sprite = animation_component.get_animated_sprite()
-                if sprite and sprite.flip_h:
-                        facing = -1.0
+	# Determine facing direction
+	var facing: float = 1.0
+	if animation_component:
+		var sprite = animation_component.get_animated_sprite()
+		if sprite and sprite.flip_h:
+			facing = -1.0
 
-        # Check all bodies overlapping the attack hitbox
-        if attack_area:
-                var bodies = attack_area.get_overlapping_bodies()
-                for body in bodies:
-                        if body == self:
-                                continue
-                        if body.has_method("take_damage"):
-                                # Only hit enemies in the direction the player faces
-                                var dir_to_target = signf(body.global_position.x - global_position.x)
-                                if dir_to_target == facing or absf(body.global_position.x - global_position.x) < 40.0:
-                                        body.take_damage(attack_damage, self)
-                                        VFXController.spawn_hit_spark(body.global_position, facing)
+	# Check all bodies overlapping the attack hitbox
+	if attack_area:
+		var bodies = attack_area.get_overlapping_bodies()
+		for body in bodies:
+			if body == self:
+				continue
+			if body.has_method("take_damage"):
+				# Only hit enemies in the direction the player faces
+				var dir_to_target = signf(body.global_position.x - global_position.x)
+				if dir_to_target == facing or absf(body.global_position.x - global_position.x) < 40.0:
+					body.take_damage(attack_damage, self)
+					VFXController.spawn_hit_spark(body.global_position, facing)
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -217,56 +225,56 @@ func _perform_attack() -> void:
 # ═══════════════════════════════════════════════════════════════════════
 
 func _perform_melee() -> void:
-        is_meleeing = true
-        melee_timer = MELEE_DURATION + MELEE_COOLDOWN
+	is_meleeing = true
+	melee_timer = MELEE_DURATION + MELEE_COOLDOWN
 
-        # Play attack animation
-        if animation_component:
-                animation_component.play_animation("attack")
+	# Play attack animation
+	if animation_component:
+		animation_component.play_animation("attack")
 
-        # Determine facing direction
-        var facing: float = 1.0
-        if animation_component:
-                var sprite = animation_component.get_animated_sprite()
-                if sprite and sprite.flip_h:
-                        facing = -1.0
+	# Determine facing direction
+	var facing: float = 1.0
+	if animation_component:
+		var sprite = animation_component.get_animated_sprite()
+		if sprite and sprite.flip_h:
+			facing = -1.0
 
-        # Spawn the visual slash effect (skip for electricity)
-        var skin_name: String = "blood"
-        if animation_component:
-                skin_name = animation_component.get_current_character()
-        if skin_name != "electricity":
-                var slash = preload("res://scripts/MeleeSlash.gd").new(facing, skin_name)
-                add_child(slash)
+	# Spawn the visual slash effect (skip for electricity)
+	var skin_name: String = "blood"
+	if animation_component:
+		skin_name = animation_component.get_current_character()
+	if skin_name != "electricity":
+		var slash = preload("res://scripts/melee_slash.gd").new(facing, skin_name)
+		add_child(slash)
 
-        # Damage enemies in melee range (smaller than F-attack)
-        var melee_area := _get_melee_overlap(facing)
-        for body in melee_area:
-                if body == self:
-                        continue
-                if body.has_method("take_damage"):
-                        var dir_to_target = signf(body.global_position.x - global_position.x)
-                        if dir_to_target == facing or absf(body.global_position.x - global_position.x) < 80.0:
-                                body.take_damage(melee_damage, self)
-                                VFXController.spawn_hit_spark(body.global_position, facing)
-                                VFXController.spawn_slash_impact((global_position + body.global_position) / 2.0)
+	# Damage enemies in melee range (smaller than F-attack)
+	var melee_area := _get_melee_overlap(facing)
+	for body in melee_area:
+		if body == self:
+			continue
+		if body.has_method("take_damage"):
+			var dir_to_target = signf(body.global_position.x - global_position.x)
+			if dir_to_target == facing or absf(body.global_position.x - global_position.x) < 80.0:
+				body.take_damage(melee_damage, self)
+				VFXController.spawn_hit_spark(body.global_position, facing)
+				VFXController.spawn_slash_impact((global_position + body.global_position) / 2.0)
 
 
 func _get_melee_overlap(facing: float) -> Array:
-        # Use a direct space-state shape cast for precise melee hitbox
-        var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
-        var query := PhysicsShapeQueryParameters2D.new()
-        var shape := CircleShape2D.new()
-        shape.radius = 75.0
-        query.shape = shape
-        query.transform = Transform2D(0.0, global_position + Vector2(facing * 45.0, -10.0))
-        query.collision_mask = 4  # enemy layer
-        var results = space_state.intersect_shape(query)
-        var bodies: Array = []
-        for r: Dictionary in results:
-                if r.has("collider") and r["collider"] is Node2D:
-                        bodies.append(r["collider"])
-        return bodies
+	# Use a direct space-state shape cast for precise melee hitbox
+	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	var query := PhysicsShapeQueryParameters2D.new()
+	var shape := CircleShape2D.new()
+	shape.radius = 75.0
+	query.shape = shape
+	query.transform = Transform2D(0.0, global_position + Vector2(facing * 45.0, -10.0))
+	query.collision_mask = 4  # enemy layer
+	var results = space_state.intersect_shape(query)
+	var bodies: Array = []
+	for r: Dictionary in results:
+		if r.has("collider") and r["collider"] is Node2D:
+			bodies.append(r["collider"])
+	return bodies
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -274,30 +282,30 @@ func _get_melee_overlap(facing: float) -> Array:
 # ═══════════════════════════════════════════════════════════════════════
 
 func _on_damage_taken(amount: float, source: Node) -> void:
-        # Apply knockback away from the damage source
-        if source and is_instance_valid(source):
-                var dir: float = signf(global_position.x - source.global_position.x)
-                if dir == 0.0:
-                        dir = 1.0
-                knockback_velocity = Vector2(dir * KNOCKBACK_FORCE_X, KNOCKBACK_FORCE_Y)
-                knockback_timer = KNOCKBACK_DURATION
+	# Apply knockback away from the damage source
+	if source and is_instance_valid(source):
+		var dir: float = signf(global_position.x - source.global_position.x)
+		if dir == 0.0:
+			dir = 1.0
+		knockback_velocity = Vector2(dir * KNOCKBACK_FORCE_X, KNOCKBACK_FORCE_Y)
+		knockback_timer = KNOCKBACK_DURATION
 
-        # Red flash on damage
-        modulate = Color(2.0, 0.5, 0.5)
-        var tween := create_tween()
-        tween.tween_property(self, "modulate", Color.WHITE, 0.2)
-        VFXController.spawn_damage_spark(global_position + Vector2(0, -20.0))
+	# Red flash on damage
+	modulate = Color(2.0, 0.5, 0.5)
+	var tween := create_tween()
+	tween.tween_property(self, "modulate", Color.WHITE, 0.2)
+	VFXController.spawn_damage_spark(vfx_center.global_position)
 
 
 func _on_health_depleted() -> void:
-        is_dead = true
-        print("[Player] Health depleted — respawning...")
-        # Disable collision so nothing else interacts with the corpse
-        collision_layer = 0
-        collision_mask = 0
-        # Brief pause, then reload the scene
-        await get_tree().create_timer(1.0).timeout
-        get_tree().reload_current_scene()
+	is_dead = true
+	print("[Player] Health depleted — respawning...")
+	# Disable collision so nothing else interacts with the corpse
+	collision_layer = 0
+	collision_mask = 0
+	# Brief pause, then reload the scene
+	await get_tree().create_timer(1.0).timeout
+	get_tree().reload_current_scene()
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -305,8 +313,8 @@ func _on_health_depleted() -> void:
 # ═══════════════════════════════════════════════════════════════════════
 
 func _on_character_changed(new_character: String, old_character: String):
-        print("Player changed from ", old_character, " to ", new_character)
+	print("Player changed from ", old_character, " to ", new_character)
 
 
 func _on_animation_played(animation_name: String):
-        pass
+	pass
