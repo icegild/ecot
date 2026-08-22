@@ -218,7 +218,7 @@ func _perform_melee() -> void:
                         continue
                 if body.has_method("take_damage"):
                         var dir_to_target = signf(body.global_position.x - global_position.x)
-                        if dir_to_target == facing or absf(body.global_position.x - global_position.x) < 50.0:
+                        if dir_to_target == facing or absf(body.global_position.x - global_position.x) < 80.0:
                                 body.take_damage(melee_damage, self)
 
 
@@ -227,9 +227,9 @@ func _get_melee_overlap(facing: float) -> Array:
         var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
         var query := PhysicsShapeQueryParameters2D.new()
         var shape := CircleShape2D.new()
-        shape.radius = 45.0
+        shape.radius = 75.0
         query.shape = shape
-        query.transform = Transform2D(0.0, global_position + Vector2(facing * 30.0, -10.0))
+        query.transform = Transform2D(0.0, global_position + Vector2(facing * 45.0, -10.0))
         query.collision_mask = 4  # enemy layer
         var results = space_state.intersect_shape(query)
         var bodies: Array = []
