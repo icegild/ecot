@@ -12,6 +12,10 @@ const SPEED: float = 300.0
 const JUMP_VELOCITY: float = -550.0
 var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity")
 
+# Collision box: RectangleShape2D(66, 188) at offset (3, -13)
+# Shape center is at -13, half-height is 94 → feet at -13 + 94 = 81
+const FEET_OFFSET_Y: float = 81.0
+
 
 # ── Component references ──────────────────────────────────────────
 
@@ -114,17 +118,17 @@ func _physics_process(delta: float) -> void:
                         move_and_slide()
                         return
 
-        # Dust on landing
+        # Dust on landing (spawn at feet level)
         if is_on_floor() and not was_on_floor:
-                VFXController.spawn_dust(global_position + Vector2(0, 10))
+                VFXController.spawn_dust(global_position + Vector2(0, FEET_OFFSET_Y))
         was_on_floor = is_on_floor()
 
-        # Running dust trail
+        # Running dust trail (spawn at feet level)
         if is_on_floor() and absf(velocity.x) > 100.0:
                 run_dust_timer -= delta
                 if run_dust_timer <= 0.0:
                         var dust_dir: float = signf(velocity.x)
-                        VFXController.spawn_run_dust(global_position + Vector2(-dust_dir * 5, 5), dust_dir)
+                        VFXController.spawn_run_dust(global_position + Vector2(-dust_dir * 5, FEET_OFFSET_Y), dust_dir)
                         run_dust_timer = RUN_DUST_INTERVAL
         else:
                 run_dust_timer = 0.0
@@ -282,7 +286,7 @@ func _on_damage_taken(amount: float, source: Node) -> void:
         modulate = Color(2.0, 0.5, 0.5)
         var tween := create_tween()
         tween.tween_property(self, "modulate", Color.WHITE, 0.2)
-        VFXController.spawn_damage_spark(global_position)
+        VFXController.spawn_damage_spark(global_position + Vector2(0, -20.0))
 
 
 func _on_health_depleted() -> void:
