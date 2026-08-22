@@ -92,11 +92,6 @@ func _ready():
         attack_area.add_child(col)
         add_child(attack_area)
 
-        # Debug: print VFX anchor positions
-        if OS.is_debug_build():
-                print("[Player] VFXFeet local=", vfx_feet.position, " global=", vfx_feet.global_position)
-                print("[Player] VFXCenter local=", vfx_center.position, " global=", vfx_center.global_position)
-
 
 func _physics_process(delta: float) -> void:
         if is_dead:
