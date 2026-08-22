@@ -24,11 +24,25 @@
   "dialogState": {
     "iconMode": true,
     "emojiMode": false,
-    "rulePage": "file"
+    "rulePage": "folder"
   },
   "appIcons": {},
   "tabIcons": {},
-  "fileIcons": {},
+  "fileIcons": {
+    "CDF/CharacterAnimationComponent.md": {
+      "icon": "lucide-sticker"
+    },
+    "CDF/HealthAndEnergyComponent.md": {
+      "icon": "lucide-battery-plus"
+    },
+    "Echoes Of The Shadow.md": {
+      "icon": "lucide-home",
+      "color": "cyan"
+    },
+    "TODO.md": {
+      "icon": "lucide-list-todo"
+    }
+  },
   "bookmarkIcons": {},
   "tagIcons": {},
   "propertyIcons": {},

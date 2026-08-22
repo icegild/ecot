@@ -45,7 +45,17 @@
         "type": "tabs",
         "children": [
           {
-            "id": "b44cbaf43dba853d",
+            "id": "f126072c19d88480",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          },
+          {
+            "id": "90750a3001f3ad1f",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -58,7 +68,7 @@
             }
           },
           {
-            "id": "374988c28db4b61b",
+            "id": "2b274a217546fc2d",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -72,16 +82,6 @@
               },
               "icon": "lucide-search",
               "title": "Search"
-            }
-          },
-          {
-            "id": "f126072c19d88480",
-            "type": "leaf",
-            "state": {
-              "type": "bookmarks",
-              "state": {},
-              "icon": "lucide-bookmark",
-              "title": "Bookmarks"
             }
           }
         ]
@@ -99,69 +99,7 @@
         "type": "tabs",
         "children": [
           {
-            "id": "c4aca5ec57af830c",
-            "type": "leaf",
-            "state": {
-              "type": "backlink",
-              "state": {
-                "file": "TODO.md",
-                "collapseAll": false,
-                "extraContext": false,
-                "sortOrder": "alphabetical",
-                "showSearch": false,
-                "searchQuery": "",
-                "backlinkCollapsed": false,
-                "unlinkedCollapsed": true
-              },
-              "icon": "links-coming-in",
-              "title": "Backlinks for TODO"
-            }
-          },
-          {
-            "id": "5eb8c8bc73e33cf3",
-            "type": "leaf",
-            "state": {
-              "type": "outgoing-link",
-              "state": {
-                "file": "TODO.md",
-                "linksCollapsed": false,
-                "unlinkedCollapsed": false
-              },
-              "icon": "links-going-out",
-              "title": "Outgoing links from TODO"
-            }
-          },
-          {
-            "id": "d55f1e2121e58e3c",
-            "type": "leaf",
-            "state": {
-              "type": "tag",
-              "state": {
-                "sortOrder": "frequency",
-                "useHierarchy": true,
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-tags",
-              "title": "Tags"
-            }
-          },
-          {
-            "id": "c51f00072cce5b35",
-            "type": "leaf",
-            "state": {
-              "type": "all-properties",
-              "state": {
-                "sortOrder": "frequency",
-                "showSearch": false,
-                "searchQuery": ""
-              },
-              "icon": "lucide-archive",
-              "title": "All properties"
-            }
-          },
-          {
-            "id": "043a295385890b86",
+            "id": "d462136adf41008c",
             "type": "leaf",
             "state": {
               "type": "outline",
@@ -175,8 +113,7 @@
               "title": "Outline of TODO"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "horizontal",
@@ -200,7 +137,7 @@
       "iconic:Open rulebook": false
     }
   },
-  "active": "1e4b420843177f4a",
+  "active": "d462136adf41008c",
   "lastOpenFiles": [
     "Echoes Of The Shadow.md",
     "CDF/CharacterAnimationComponent.md",

@@ -5,17 +5,16 @@
 [ext_resource type="SpriteFrames" uid="uid://hklanvpkynih" path="res://animations/blood.tres" id="2_o5ph0"]
 [ext_resource type="Script" uid="uid://ctwp6s5gdkmeh" path="res://scripts/player_stats_cmpnnt.gd" id="4_1txc5"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_egtl6"]
-radius = 30.0
-height = 172.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sxe7q"]
+size = Vector2(66, 188)
 
 [node name="CharacterBody2D" type="CharacterBody2D" unique_id=248031688 groups=["player"]]
 collision_layer = 2
 script = ExtResource("1_jvmh5")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=918817900]
-position = Vector2(7, 1)
-shape = SubResource("CapsuleShape2D_egtl6")
+position = Vector2(3, -13)
+shape = SubResource("RectangleShape2D_sxe7q")
 
 [node name="PlayerSkinComponent" type="Node2D" parent="." unique_id=947904904]
 script = ExtResource("1_o5ph0")
