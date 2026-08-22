@@ -102,7 +102,6 @@ func _ready() -> void:
 		queue_free()
 		return
 
-	var base_size: Vector2 = _slash_tex.get_size()
 
 	# ── Glow layer (larger, softer) ────────────────────────────────
 	_glow_sprite = Sprite2D.new()
