@@ -1,6 +1,11 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
-.idea/vcs.xml
 *.tmp
 scenes/test.tscn
+
+# IDE
+.idea/
+
+# Obsidian vault (not part of game project)
+vault/

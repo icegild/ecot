@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://dlm6i0mefhr1r" path="res://assets/enemy/shadow-dagger/wal/shadow-daggger1.png" id="1_klw33"]
 [ext_resource type="Texture2D" uid="uid://bl56wwvy6albk" path="res://assets/enemy/shadow-dagger/wal/shadow-daggger2.png" id="2_5e0lv"]
 [ext_resource type="Texture2D" uid="uid://dhef7hvaskhoa" path="res://assets/enemy/shadow-dagger/wal/shadow-daggger3.png" id="3_tn3jt"]
-[ext_resource type="Script" uid="uid://ctwp6s5gdkmeh" path="res://scripts/player_stats_cmpnnt.gd" id="4_mruna"]
+[ext_resource type="Script" uid="uid://ctwp6s5gdkmeh" path="res://scripts/player_stats_component.gd" id="4_mruna"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_vm0n7"]
 animations = [{
