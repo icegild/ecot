@@ -72,7 +72,7 @@ var is_dead: bool = false
 # ── Node refs ────────────────────────────────────────────────────────
 
 @onready var hitbox_area: Area2D = $HitboxArea
-
+@onready var enemy_sprite: Node2D = get_node_or_null("Sprite2D") if has_node("Sprite2D") else get_node_or_null("AnimatedSprite2D")
 
 # ═══════════════════════════════════════════════════════════════════════
 #  LIFECYCLE
@@ -106,6 +106,9 @@ func _physics_process(delta: float) -> void:
 			_state_patrol(delta)
 		State.CHASE:
 			_state_chase(delta)
+			
+	if enemy_sprite:
+		enemy_sprite.flip_h = facing_direction > 0.0
 	move_and_slide()
 	queue_redraw()
 
@@ -276,6 +279,7 @@ func _on_hitbox_body_entered(body: Node2D) -> void:
 # ═══════════════════════════════════════════════════════════════════════
 
 func _draw() -> void:
+	return
 	if is_dead:
 		return
 	var r: float = body_radius
