@@ -155,25 +155,25 @@ sources/0 = SubResource("TileSetAtlasSource_daiq8")
 
 [node name="Test" type="Node2D" unique_id=296746389]
 position = Vector2(-12, 314)
-[node name="DarkBG" type="ColorRect" parent="." unique_id=9000000001"]
+[node name="DarkBG" type="ColorRect" parent="."]
 z_index = -100
 offset_right = 4096.0
 offset_bottom = 4096.0
 color = Color(0.02, 0.02, 0.04, 1)
 
-[node name="CanvasModulate" type="CanvasModulate" parent="." unique_id=9000000002"]
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
 color = Color(0.3, 0.3, 0.35, 1)
 
-[node name="Torch1" type="Node2D" parent="." unique_id=9000000003"]
+[node name="Torch1" type="Node2D" parent="."]
 position = Vector2(100, 560)
 
-[node name="Sprite2D" type="Sprite2D" parent="Torch1" unique_id=9000000004"]
+[node name="Sprite2D" type="Sprite2D" parent="Torch1""]
 script = ExtResource("15_torchanim")
 hframes = 4
 texture = ExtResource("13_torch")
 frame = 0
 
-[node name="PointLight2D" type="PointLight2D" parent="Torch1" unique_id=9000000005"]
+[node name="PointLight2D" type="PointLight2D" parent="Torch1""]
 script = ExtResource("14_flicker")
 layer = 6
 position = Vector2(0, -40)
@@ -181,16 +181,16 @@ color = Color(1, 0.7, 0.3, 1)
 energy = 1.5
 range = 200.0
 
-[node name="Torch2" type="Node2D" parent="." unique_id=9000000006"]
+[node name="Torch2" type="Node2D" parent="."]
 position = Vector2(-200, 560)
 
-[node name="Sprite2D" type="Sprite2D" parent="Torch2" unique_id=9000000007"]
+[node name="Sprite2D" type="Sprite2D" parent="Torch2""]
 script = ExtResource("15_torchanim")
 hframes = 4
 texture = ExtResource("13_torch")
 frame = 0
 
-[node name="PointLight2D" type="PointLight2D" parent="Torch2" unique_id=9000000008"]
+[node name="PointLight2D" type="PointLight2D" parent="Torch2""]
 script = ExtResource("14_flicker")
 layer = 6
 position = Vector2(0, -40)
@@ -198,16 +198,16 @@ color = Color(1, 0.7, 0.3, 1)
 energy = 1.5
 range = 200.0
 
-[node name="Torch3" type="Node2D" parent="." unique_id=9000000009"]
+[node name="Torch3" type="Node2D" parent="."]
 position = Vector2(400, 560)
 
-[node name="Sprite2D" type="Sprite2D" parent="Torch3" unique_id=9000000010"]
+[node name="Sprite2D" type="Sprite2D" parent="Torch3""]
 script = ExtResource("15_torchanim")
 hframes = 4
 texture = ExtResource("13_torch")
 frame = 0
 
-[node name="PointLight2D" type="PointLight2D" parent="Torch3" unique_id=9000000011"]
+[node name="PointLight2D" type="PointLight2D" parent="Torch3""]
 script = ExtResource("14_flicker")
 layer = 6
 position = Vector2(0, -40)
@@ -215,16 +215,16 @@ color = Color(1, 0.7, 0.3, 1)
 energy = 1.5
 range = 200.0
 
-[node name="Torch4" type="Node2D" parent="." unique_id=9000000012"]
+[node name="Torch4" type="Node2D" parent="."]
 position = Vector2(250, 360)
 
-[node name="Sprite2D" type="Sprite2D" parent="Torch4" unique_id=9000000013"]
+[node name="Sprite2D" type="Sprite2D" parent="Torch4""]
 script = ExtResource("15_torchanim")
 hframes = 4
 texture = ExtResource("13_torch")
 frame = 0
 
-[node name="PointLight2D" type="PointLight2D" parent="Torch4" unique_id=9000000014"]
+[node name="PointLight2D" type="PointLight2D" parent="Torch4""]
 script = ExtResource("14_flicker")
 layer = 6
 position = Vector2(0, -40)
@@ -232,16 +232,16 @@ color = Color(1, 0.7, 0.3, 1)
 energy = 1.2
 range = 180.0
 
-[node name="Torch5" type="Node2D" parent="." unique_id=9000000015"]
+[node name="Torch5" type="Node2D" parent="."]
 position = Vector2(-50, 360)
 
-[node name="Sprite2D" type="Sprite2D" parent="Torch5" unique_id=9000000016"]
+[node name="Sprite2D" type="Sprite2D" parent="Torch5""]
 script = ExtResource("15_torchanim")
 hframes = 4
 texture = ExtResource("13_torch")
 frame = 0
 
-[node name="PointLight2D" type="PointLight2D" parent="Torch5" unique_id=9000000017"]
+[node name="PointLight2D" type="PointLight2D" parent="Torch5""]
 script = ExtResource("14_flicker")
 layer = 6
 position = Vector2(0, -40)
