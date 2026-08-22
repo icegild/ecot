@@ -12,8 +12,9 @@
 [ext_resource type="Texture2D" uid="uid://bx2hug3xsjstp" path="res://assets/tiles/Decoration_tiles1.png" id="10_7mbro"]
 [ext_resource type="PackedScene" uid="uid://s88mhq07o2dk" path="res://prefabs/enemy_spawner.tscn" id="11_ajshl"]
 [ext_resource type="PackedScene" uid="uid://chud001pixelhearts" path="res://scenes/hud.tscn" id="12_hud"]
-[ext_resource type="Texture2D" uid="uid://torchlight1" path="res://assets/sprites/torch_anim.png" id="13_torch"
-[ext_resource type="Script" uid="uid://torchflicker1" path="res://prefabs/torch_flicker.gd" id="14_flicker"]]
+[ext_resource type="Texture2D" path="res://assets/sprites/torch_anim.png" id="13_torch"]
+[ext_resource type="Script" path="res://prefabs/torch_flicker.gd" id="14_flicker"]
+[ext_resource type="Script" path="res://prefabs/torch_anim.gd" id="15_torchanim"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ff6ho"]
 texture = ExtResource("6_yk7ts")
@@ -152,9 +153,6 @@ texture = ExtResource("10_7mbro")
 sources/0 = SubResource("TileSetAtlasSource_daiq8")
 
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_torch"]
-animations = [{"frames": [{"duration": 0.15, "texture": ExtResource("13_torch")}, {"duration": 0.15, "texture": ExtResource("13_torch")}, {"duration": 0.15, "texture": ExtResource("13_torch")}, {"duration": 0.15, "texture": ExtResource("13_torch")}], "loop": true, "name": &"default", "speed": 6.0}]
-
 [node name="Test" type="Node2D" unique_id=296746389]
 position = Vector2(-12, 314)
 [node name="DarkBG" type="ColorRect" parent="." unique_id=9000000001"]
@@ -169,11 +167,11 @@ color = Color(0.3, 0.3, 0.35, 1)
 [node name="Torch1" type="Node2D" parent="." unique_id=9000000003"]
 position = Vector2(100, 560)
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Torch1" unique_id=9000000004"]
-sprite_frames = SubResource("SpriteFrames_torch")
+[node name="Sprite2D" type="Sprite2D" parent="Torch1" unique_id=9000000004"]
+script = ExtResource("15_torchanim")
 hframes = 4
+texture = ExtResource("13_torch")
 frame = 0
-playing = true
 
 [node name="PointLight2D" type="PointLight2D" parent="Torch1" unique_id=9000000005"]
 script = ExtResource("14_flicker")
@@ -186,11 +184,11 @@ range = 200.0
 [node name="Torch2" type="Node2D" parent="." unique_id=9000000006"]
 position = Vector2(-200, 560)
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Torch2" unique_id=9000000007"]
-sprite_frames = SubResource("SpriteFrames_torch")
+[node name="Sprite2D" type="Sprite2D" parent="Torch2" unique_id=9000000007"]
+script = ExtResource("15_torchanim")
 hframes = 4
+texture = ExtResource("13_torch")
 frame = 0
-playing = true
 
 [node name="PointLight2D" type="PointLight2D" parent="Torch2" unique_id=9000000008"]
 script = ExtResource("14_flicker")
@@ -203,11 +201,11 @@ range = 200.0
 [node name="Torch3" type="Node2D" parent="." unique_id=9000000009"]
 position = Vector2(400, 560)
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Torch3" unique_id=9000000010"]
-sprite_frames = SubResource("SpriteFrames_torch")
+[node name="Sprite2D" type="Sprite2D" parent="Torch3" unique_id=9000000010"]
+script = ExtResource("15_torchanim")
 hframes = 4
+texture = ExtResource("13_torch")
 frame = 0
-playing = true
 
 [node name="PointLight2D" type="PointLight2D" parent="Torch3" unique_id=9000000011"]
 script = ExtResource("14_flicker")
@@ -220,11 +218,11 @@ range = 200.0
 [node name="Torch4" type="Node2D" parent="." unique_id=9000000012"]
 position = Vector2(250, 360)
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Torch4" unique_id=9000000013"]
-sprite_frames = SubResource("SpriteFrames_torch")
+[node name="Sprite2D" type="Sprite2D" parent="Torch4" unique_id=9000000013"]
+script = ExtResource("15_torchanim")
 hframes = 4
+texture = ExtResource("13_torch")
 frame = 0
-playing = true
 
 [node name="PointLight2D" type="PointLight2D" parent="Torch4" unique_id=9000000014"]
 script = ExtResource("14_flicker")
@@ -237,11 +235,11 @@ range = 180.0
 [node name="Torch5" type="Node2D" parent="." unique_id=9000000015"]
 position = Vector2(-50, 360)
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Torch5" unique_id=9000000016"]
-sprite_frames = SubResource("SpriteFrames_torch")
+[node name="Sprite2D" type="Sprite2D" parent="Torch5" unique_id=9000000016"]
+script = ExtResource("15_torchanim")
 hframes = 4
+texture = ExtResource("13_torch")
 frame = 0
-playing = true
 
 [node name="PointLight2D" type="PointLight2D" parent="Torch5" unique_id=9000000017"]
 script = ExtResource("14_flicker")
