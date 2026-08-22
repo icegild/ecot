@@ -197,6 +197,10 @@ func _perform_melee() -> void:
         is_meleeing = true
         melee_timer = MELEE_DURATION + MELEE_COOLDOWN
 
+        # Play attack animation
+        if animation_component:
+                animation_component.play_animation("attack")
+
         # Determine facing direction
         var facing: float = 1.0
         if animation_component:
@@ -204,12 +208,13 @@ func _perform_melee() -> void:
                 if sprite and sprite.flip_h:
                         facing = -1.0
 
-        # Spawn the visual slash effect
+        # Spawn the visual slash effect (skip for electricity)
         var skin_name: String = "blood"
         if animation_component:
                 skin_name = animation_component.get_current_character()
-        var slash = preload("res://scripts/MeleeSlash.gd").new(facing, skin_name)
-        add_child(slash)
+        if skin_name != "electricity":
+                var slash = preload("res://scripts/MeleeSlash.gd").new(facing, skin_name)
+                add_child(slash)
 
         # Damage enemies in melee range (smaller than F-attack)
         var melee_area := _get_melee_overlap(facing)
