@@ -1,4 +1,6 @@
 # Godot 4+ specific ignores
+*.uid
+*import
 .godot/
 /android/
 *.tmp
@@ -8,3 +10,4 @@
 
 # Obsidian vault (not part of game project)
 vault/
+scripts/player_controller.gd.uid
