@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://cjqc3oqdav33w" path="res://assets/tiles/Decoration_tiles2.png" id="9_44saj"]
 [ext_resource type="Texture2D" uid="uid://bx2hug3xsjstp" path="res://assets/tiles/Decoration_tiles1.png" id="10_7mbro"]
 [ext_resource type="PackedScene" uid="uid://s88mhq07o2dk" path="res://prefabs/enemy_spawner.tscn" id="11_ajshl"]
+[ext_resource type="PackedScene" uid="uid://chud001pixelhearts" path="res://scenes/hud.tscn" id="12_hud"]
 
 [sub_resource type="Gradient" id="Gradient_ghpyy"]
 offsets = PackedFloat32Array(0, 0.5346535, 1)
@@ -255,3 +256,5 @@ scale = Vector2(2, 2)
 tile_set = SubResource("TileSet_uift0")
 
 [node name="EnemySpawner" parent="." unique_id=2120283021 instance=ExtResource("11_ajshl")]
+
+[node name="HUD" parent="." instance=ExtResource("12_hud")]

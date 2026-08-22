@@ -1,52 +1,50 @@
 extends CanvasLayer
 
 # ─────────────────────────────────────────────────────────────────────
-#  HUD.gd  –  Circular HUD with extending HP/MP bars
-#  Godot 4.7  |  Strict-typed, zero warnings
-# ─────────────────────────────────────────────────────────────────────
-#
-#  SETUP
-#    1. Create a CanvasLayer node in your scene
-#    2. Attach this script to it
-#    3. Make sure your player is in the "player" group
-#    4. Later: assign player_portrait in the Inspector for skin texture
-#
+#  HUD.gd  –  Pixel-heart health & energy-drop display
+#  Godot 4.7  |  Uses sprite assets from assets/ui/
 # ─────────────────────────────────────────────────────────────────────
 
 
 # ── Exports ──────────────────────────────────────────────────────────
 
 @export_group("Layout")
-@export var margin_x: int = 30
-@export var margin_y: int = 30
-@export var circle_radius: int = 36
-@export var bar_width: int = 120
-@export var bar_height: int = 10
-@export var bar_gap: int = 6
+@export var margin_x: int = 24
+@export var margin_y: int = 24
+@export var heart_scale: float = 0.55
+@export var energy_scale: float = 0.45
+@export var spacing: int = 4
 
-@export_group("Colors")
-@export var health_color: Color = Color("#ff4757")
-@export var health_bg: Color = Color("#3a1515")
-@export var mana_color: Color = Color("#3b9eff")
-@export var mana_bg: Color = Color("#15253a")
-@export var ring_color: Color = Color("#6a6d7e")
-@export var circle_fill: Color = Color("#0e0e1a")
-@export var text_color: Color = Color("#e0e0e0")
+@export_group("Hearts")
+@export var max_display_hearts: int = 5
+@export var hp_per_heart: float = 20.0
+@export var heart_full: Texture2D = preload("res://assets/ui/heart_full.png")
+@export var heart_half: Texture2D = preload("res://assets/ui/heart_half.png")
+@export var heart_empty: Texture2D = preload("res://assets/ui/heart_empty.png")
 
-@export_group("Portrait")
-@export var player_portrait: Texture2D = null
+@export_group("Energy")
+@export var max_display_energy: int = 5
+@export var ep_per_drop: float = 20.0
+@export var energy_full: Texture2D = preload("res://assets/ui/energy_drop.png")
+@export var energy_empty: Texture2D = preload("res://assets/ui/energy_empty.png")
 
 @export_group("Animation")
-@export var smooth_speed: float = 8.0
+@export var damage_shake_duration: float = 0.3
+@export var damage_shake_amount: float = 4.0
+@export var heart_pop_scale: float = 1.3
+@export var heart_pop_duration: float = 0.15
 
 
 # ── Internal ────────────────────────────────────────────────────────
 
-var panel: Control = null
 var player_ref: CharacterBody2D = null
 var stats_component: Node = null
-var display_hp: float = 1.0   # 0.0 – 1.0
-var display_mp: float = 1.0   # 0.0 – 1.0
+var heart_container: HBoxContainer = null
+var energy_container: HBoxContainer = null
+var heart_sprites: Array[TextureRect] = []
+var energy_sprites: Array[TextureRect] = []
+var root_container: VBoxContainer = null
+var is_shaking: bool = false
 
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -54,170 +52,176 @@ var display_mp: float = 1.0   # 0.0 – 1.0
 # ═══════════════════════════════════════════════════════════════════════
 
 func _ready() -> void:
-		# Force this layer ABOVE everything else
-		layer = 100
-		_build_ui()
-		print("[HUD] CanvasLayer ready, layer=100, drawing at bottom-right")
-		# Give the scene tree a frame to settle, then look for player
-		await get_tree().process_frame
-		_find_player()
-
-
-func _process(delta: float) -> void:
-		# Always try to find player if we don't have one
-		if not player_ref or not is_instance_valid(player_ref):
-				player_ref = null
-				stats_component = null
-				_find_player()
-
-		# Smooth lerp toward target values
-		var target_hp: float = 1.0
-		var target_mp: float = 1.0
-		var hp_text: String = "100/100"
-		var mp_text: String = "100/100"
-
-		if stats_component and is_instance_valid(stats_component):
-				target_hp = stats_component.get_health_percent() / 100.0
-				target_mp = stats_component.get_energy_percent() / 100.0
-				hp_text = stats_component.get_health_string()
-				mp_text = stats_component.get_energy_string()
-
-		display_hp = lerpf(display_hp, target_hp, smooth_speed * delta)
-		display_mp = lerpf(display_mp, target_mp, smooth_speed * delta)
-
-		if absf(display_hp - target_hp) < 0.005:
-				display_hp = target_hp
-		if absf(display_mp - target_mp) < 0.005:
-				display_mp = target_mp
-
-		# ALWAYS redraw, every frame, no matter what
-		if panel:
-				panel.queue_redraw()
+        layer = 100
+        _build_ui()
+        # Let scene tree settle, then find player
+        await get_tree().process_frame
+        _find_player()
 
 
 # ═══════════════════════════════════════════════════════════════════════
-#  UI CONSTRUCTION  –  single Control, everything drawn in _draw
+#  UI CONSTRUCTION
 # ═══════════════════════════════════════════════════════════════════════
 
 func _build_ui() -> void:
-		var diam: int = circle_radius * 2
-		var total_w: int = diam + 14 + bar_width + 50
-		var total_h: int = diam
+        # Root VBox: hearts on top, energy below
+        root_container = VBoxContainer.new()
+        root_container.name = "HUDRoot"
+        root_container.anchor_left = 0.0
+        root_container.anchor_top = 0.0
+        root_container.offset_left = float(margin_x)
+        root_container.offset_top = float(margin_y)
+        root_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+        root_container.add_theme_constant_override("separation", 8)
+        add_child(root_container)
 
-		panel = Control.new()
-		panel.name = "HUDPanel"
-		panel.anchor_right = 1.0
-		panel.anchor_bottom = 1.0
-		panel.offset_left = float(-(margin_x + total_w))
-		panel.offset_top = float(-(margin_y + total_h))
-		panel.offset_right = float(-margin_x)
-		panel.offset_bottom = float(-margin_y)
-		panel.custom_minimum_size = Vector2(total_w, total_h)
-		panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		add_child(panel)
+        # ── Hearts row ─────────────────────────────────────────────
+        heart_container = HBoxContainer.new()
+        heart_container.name = "HeartsRow"
+        heart_container.add_theme_constant_override("separation", spacing)
+        heart_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+        root_container.add_child(heart_container)
 
-		panel.draw.connect(_on_panel_draw)
+        for i in range(max_display_hearts):
+                var rect := TextureRect.new()
+                rect.name = "Heart%d" % i
+                rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+                rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+                rect.texture = heart_empty
+                rect.set_anchors_and_offsets_preset(Control.PRESET_KEEP_SIZE)
+                # Set size based on heart texture
+                if heart_empty:
+                        var s = heart_empty.get_size() * heart_scale
+                        rect.custom_minimum_size = s
+                heart_container.add_child(rect)
+                heart_sprites.append(rect)
 
+        # ── Energy row ─────────────────────────────────────────────
 
-# ═══════════════════════════════════════════════════════════════════════
-#  DRAWING  –  all visuals in one callback
-# ═══════════════════════════════════════════════════════════════════════
+        energy_container = HBoxContainer.new()
+        energy_container.name = "EnergyRow"
+        energy_container.add_theme_constant_override("separation", spacing)
+        energy_container.mouse_filter = Control.MOUSE_FILTER_IGNORE
+        root_container.add_child(energy_container)
 
-func _on_panel_draw() -> void:
-		var diam: int = circle_radius * 2
-		var cx: float = float(circle_radius)
-		var cy: float = float(circle_radius)
-		var r: float = float(circle_radius)
+        for i in range(max_display_energy):
+                var rect := TextureRect.new()
+                rect.name = "Energy%d" % i
+                rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+                rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+                rect.texture = energy_empty
+                rect.set_anchors_and_offsets_preset(Control.PRESET_KEEP_SIZE)
+                if energy_empty:
+                        var s = energy_empty.get_size() * energy_scale
+                        rect.custom_minimum_size = s
+                energy_container.add_child(rect)
+                energy_sprites.append(rect)
 
-		# ── 1. Portrait circle ──────────────────────────────────────────
-		# Dark fill
-		panel.draw_circle(Vector2(cx, cy), r, circle_fill)
-
-		# Portrait texture (if assigned)
-		if player_portrait:
-				var inset: float = 3.0
-				panel.draw_texture_rect(
-						player_portrait,
-						Rect2(cx - r + inset, cy - r + inset, (r - inset) * 2.0, (r - inset) * 2.0),
-						false
-				)
-
-		# Outer ring
-		panel.draw_arc(Vector2(cx, cy), r, 0.0, TAU, 64, ring_color, 2.0, true)
-
-		# Inner ring
-		panel.draw_arc(Vector2(cx, cy), r - 3.0, 0.0, TAU, 48, ring_color * 0.3, 1.0, true)
-
-		# Tick marks
-		var tick_count: int = 12
-		var i: int = 0
-		while i < tick_count:
-				var angle: float = float(i) * TAU / float(tick_count)
-				var is_major: bool = (i % 3 == 0)
-				var inner_r: float = r + 1.0
-				var outer_r: float = r + (5.0 if is_major else 3.0)
-				var x1: float = cx + cos(angle) * inner_r
-				var y1: float = cy + sin(angle) * inner_r
-				var x2: float = cx + cos(angle) * outer_r
-				var y2: float = cy + sin(angle) * outer_r
-				var tick_col: Color = ring_color * (0.8 if is_major else 0.35)
-				var tick_w: float = 1.0 if is_major else 0.5
-				panel.draw_line(Vector2(x1, y1), Vector2(x2, y2), tick_col, tick_w)
-				i += 1
-
-		# ── 2. Connecting lines from circle to bars ─────────────────────
-		var bar_x: float = float(diam + 14)
-		var bars_h: float = float(bar_height * 2 + bar_gap)
-		var bars_y: float = cy - bars_h / 2.0
-		var hp_cy: float = bars_y + float(bar_height) / 2.0
-		var mp_cy: float = bars_y + float(bar_height + bar_gap) + float(bar_height) / 2.0
-
-		panel.draw_line(Vector2(r + 2, cy - 5.0), Vector2(bar_x - 2.0, hp_cy), ring_color * 0.4, 1.0)
-		panel.draw_line(Vector2(r + 2, cy + 5.0), Vector2(bar_x - 2.0, mp_cy), ring_color * 0.4, 1.0)
-
-		# ── 3. HP bar ──────────────────────────────────────────────────
-		var hp_text: String = "100/100"
-		if stats_component and is_instance_valid(stats_component):
-				hp_text = stats_component.get_health_string()
-		_draw_bar(bar_x, bars_y, float(bar_width), float(bar_height), display_hp, health_color, health_bg, "HP", hp_text)
-
-		# ── 4. MP bar ──────────────────────────────────────────────────
-		var mp_y: float = bars_y + float(bar_height + bar_gap)
-		var mp_text: String = "100/100"
-		if stats_component and is_instance_valid(stats_component):
-				mp_text = stats_component.get_energy_string()
-		_draw_bar(bar_x, mp_y, float(bar_width), float(bar_height), display_mp, mana_color, mana_bg, "MP", mp_text)
-
-
-func _draw_bar(x: float, y: float, w: float, h: float, pct: float, fill_col: Color, bg_col: Color, label: String, value_text: String) -> void:
-		var clamped: float = clampf(pct, 0.0, 1.0)
-		var fill_w: float = w * clamped
-
-		# Bar background (filled rect)
-		panel.draw_rect(Rect2(x, y, w, h), bg_col, true)
-
-		# Bar fill
-		if fill_w > 0.5:
-				panel.draw_rect(Rect2(x, y, fill_w, h), fill_col, true)
-
-		# Border outline
-		panel.draw_rect(Rect2(x, y, w, h), ring_color * 0.5, false, 1.0)
-
-		# Label text (left side inside bar)
-		var font: Font = ThemeDB.fallback_font
-		panel.draw_string(font, Vector2(x + 4.0, y + h - 1.0), label, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 9, text_color)
-
-		# Value text (right side, outside bar)
-		panel.draw_string(font, Vector2(x + w + 5.0, y + h - 1.0), value_text, HORIZONTAL_ALIGNMENT_LEFT, -1.0, 9, text_color)
+        # Initial update
+        _update_hearts()
+        _update_energy()
 
 
 # ═══════════════════════════════════════════════════════════════════════
-#  PLAYER DETECTION
+#  DISPLAY UPDATE
+# ═══════════════════════════════════════════════════════════════════════
+
+func _update_hearts() -> void:
+        if not stats_component or not is_instance_valid(stats_component):
+                return
+
+        var hp: float = stats_component.get_health()
+        var remaining: float = hp
+
+        for i in range(max_display_hearts):
+                var seg: float = hp_per_heart
+                var val: float = minf(remaining, seg)
+                remaining -= seg
+
+                if val >= seg:
+                        heart_sprites[i].texture = heart_full
+                elif val >= seg * 0.5:
+                        heart_sprites[i].texture = heart_half
+                else:
+                        heart_sprites[i].texture = heart_empty
+
+
+func _update_energy() -> void:
+        if not stats_component or not is_instance_valid(stats_component):
+                return
+
+        var ep: float = stats_component.get_energy()
+        var remaining: float = ep
+
+        for i in range(max_display_energy):
+                var seg: float = ep_per_drop
+                var val: float = minf(remaining, seg)
+                remaining -= seg
+
+                if val >= seg * 0.5:
+                        energy_sprites[i].texture = energy_full
+                else:
+                        energy_sprites[i].texture = energy_empty
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  DAMAGE ANIMATION
+# ═══════════════════════════════════════════════════════════════════════
+
+func _on_damage_taken(amount: float, _source: Node) -> void:
+        # Shake the HUD container
+        if is_shaking:
+                return
+        is_shaking = true
+        var orig_pos: Vector2 = root_container.position
+        var elapsed: float = 0.0
+        while elapsed < damage_shake_duration:
+                var offset_x: float = randf_range(-damage_shake_amount, damage_shake_amount)
+                root_container.position = orig_pos + Vector2(offset_x, 0.0)
+                await get_tree().process_frame
+                elapsed += get_process_delta_time()
+        root_container.position = orig_pos
+        is_shaking = false
+
+        # Pop animation on lost hearts
+        _update_hearts()
+        for sprite in heart_sprites:
+                if sprite.texture == heart_empty:
+                        _pop_sprite(sprite)
+
+
+func _pop_sprite(sprite: TextureRect) -> void:
+        var tween := create_tween()
+        tween.tween_property(sprite, "scale", Vector2(heart_pop_scale, heart_pop_scale), heart_pop_duration * 0.5)
+        tween.tween_property(sprite, "scale", Vector2.ONE, heart_pop_duration * 0.5)
+
+
+# ═══════════════════════════════════════════════════════════════════════
+#  PLAYER DETECTION & SIGNALS
 # ═══════════════════════════════════════════════════════════════════════
 
 func _find_player() -> void:
-		var players: Array[Node] = get_tree().get_nodes_in_group("player")
-		if players.size() > 0:
-				player_ref = players[0] as CharacterBody2D
-				if player_ref and player_ref.has_node("HealthAndEnergyComponent"):
-						stats_component = player_ref.get_node("HealthAndEnergyComponent")
+        var players: Array[Node] = get_tree().get_nodes_in_group("player")
+        if players.size() > 0:
+                player_ref = players[0] as CharacterBody2D
+                if player_ref and player_ref.has_node("HealthAndEnergyComponent"):
+                        stats_component = player_ref.get_node("HealthAndEnergyComponent")
+                        # Connect signals
+                        if not stats_component.health_changed.is_connected(_update_hearts):
+                                stats_component.health_changed.connect(_update_hearts)
+                        if not stats_component.energy_changed.is_connected(_update_energy):
+                                stats_component.energy_changed.connect(_update_energy)
+                        if not stats_component.damage_taken.is_connected(_on_damage_taken):
+                                stats_component.damage_taken.connect(_on_damage_taken)
+                        # Initial update
+                        _update_hearts()
+                        _update_energy()
+                        print("[HUD] Connected to player stats component")
+
+
+func _process(_delta: float) -> void:
+        # Re-find player if lost
+        if not player_ref or not is_instance_valid(player_ref):
+                player_ref = null
+                stats_component = null
+                _find_player()
