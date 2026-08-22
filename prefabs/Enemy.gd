@@ -9,14 +9,17 @@ extends CharacterBody2D
 #    Attach this script to a CharacterBody2D with this child tree:
 #
 #      Enemy (CharacterBody2D)  ← this script
-#      ├── CollisionShape2D      ← CircleShape2D (radius ~20)
-#      └── HitboxArea (Area2D)
-#          └── HitboxShape (CollisionShape2D)  ← CircleShape2D (radius ~25)
+#      ├── CollisionShape2D      ← CapsuleShape2D
+#      ├── HitboxArea (Area2D)   ← contact-damage detector (mask 2)
+#      │   └── HitboxShape (CollisionShape2D)
+#      └── HealthAndEnergyComponent  ← player_stats_cmpnnt.gd
 #
-#  REQUIREMENTS
-#    • Player must be added to the "player" group in the editor.
-#    • Enemy uses collision layer 3, mask 1 (world) by default.
-#    • HitboxArea uses mask 2 (player layer) — see guide.
+#  COLLISION LAYERS
+#    1 = world (ground / tiles)
+#    2 = player
+#    3 = enemy
+#    Enemy body: layer 4 (enemy only), mask 1 (world only)
+#    HitboxArea:  layer 0, mask 2 (player)
 #
 # ─────────────────────────────────────────────────────────────────────
 
@@ -59,7 +62,6 @@ var current_state: State = State.IDLE
 
 # ── Internal vars ────────────────────────────────────────────────────
 
-var current_health: float = 30.0
 var gravity: float = 0.0
 var player_ref: CharacterBody2D = null
 var facing_direction: float = 1.0
@@ -73,18 +75,31 @@ var is_dead: bool = false
 
 @onready var hitbox_area: Area2D = $HitboxArea
 @onready var enemy_sprite: Node2D = get_node_or_null("Sprite2D") if has_node("Sprite2D") else get_node_or_null("AnimatedSprite2D")
+@onready var stats: HealthAndEnergyComponent = $HealthAndEnergyComponent
 
 # ═══════════════════════════════════════════════════════════════════════
 #  LIFECYCLE
 # ═══════════════════════════════════════════════════════════════════════
 
 func _ready() -> void:
-	current_health = max_health
+	# Configure HealthAndEnergyComponent for enemy use
+	if stats:
+		stats.max_health = max_health
+		stats.current_health = max_health
+		stats.invulnerability_time = 0.0
+		stats.energy_regen_enabled = false
+		stats.health_depleted.connect(_on_health_depleted)
+
 	gravity = ProjectSettings.get_setting("physics/2d/default_gravity") as float
-	collision_layer = 3
+
+	# Collision: body exists on enemy layer (4), detects world (1)
+	collision_layer = 4
 	collision_mask = 1
+
+	# HitboxArea detects player layer (2)
 	hitbox_area.collision_layer = 0
 	hitbox_area.collision_mask = 2
+
 	_find_player()
 	hitbox_area.body_entered.connect(_on_hitbox_body_entered)
 
@@ -220,23 +235,27 @@ func _check_floor_ahead() -> bool:
 func _deal_damage() -> void:
 	if not player_ref or not is_instance_valid(player_ref):
 		return
-	var stats: Node = player_ref.get_node_or_null("HealthAndEnergyComponent")
-	if stats and stats.has_method("take_damage"):
-		stats.take_damage(contact_damage, self)
+	var player_stats: Node = player_ref.get_node_or_null("HealthAndEnergyComponent")
+	if player_stats and player_stats.has_method("take_damage"):
+		player_stats.take_damage(contact_damage, self)
 		damage_dealt.emit(contact_damage, player_ref)
 	var dir: float = signf(player_ref.global_position.x - global_position.x)
 	player_ref.velocity = Vector2(dir * knockback_force, player_ref.velocity.y)
 
 
-func take_damage(amount: float, _source: Node = null) -> void:
+func take_damage(amount: float, source: Node = null) -> void:
 	if is_dead:
 		return
-	current_health -= amount
+	if stats:
+		stats.take_damage(amount, source)
+	# Visual flash on hit
 	modulate = Color(2.0, 0.5, 0.5)
 	var tween: Tween = create_tween()
 	tween.tween_property(self, "modulate", Color.WHITE, 0.15)
-	if current_health <= 0.0:
-		_die()
+
+
+func _on_health_depleted() -> void:
+	_die()
 
 
 func _die() -> void:
@@ -313,32 +332,35 @@ func _draw() -> void:
 	draw_circle(Vector2(re_x, eye_y), eye_size, Color.WHITE)
 	draw_circle(Vector2(re_x + eye_drift, eye_y), pupil_size, Color.BLACK)
 
-	# Health bar
-	if current_health < max_health:
+	# Health bar (reads from HealthAndEnergyComponent)
+	var hp: float = stats.get_health() if stats else 0.0
+	var mhp: float = stats.get_max_health() if stats else 1.0
+	if hp < mhp:
 		var bar_w: float = r * 2.5
 		var bar_h: float = 4.0
 		var bar_y: float = -r * 2.0 - 8.0
-		var pct: float = current_health / max_health
+		var pct: float = hp / mhp if mhp > 0.0 else 0.0
 		draw_rect(
 			Rect2(-bar_w / 2.0, bar_y, bar_w, bar_h),
 			Color(0.15, 0.15, 0.15, 0.8))
-		var health_color: Color = Color.GREEN
+		var health_col: Color = Color.GREEN
 		if pct < 0.5:
-			health_color = Color.YELLOW
+			health_col = Color.YELLOW
 		if pct < 0.25:
-			health_color = Color.RED
+			health_col = Color.RED
 		draw_rect(
 			Rect2(-bar_w / 2.0, bar_y, bar_w * pct, bar_h),
-			health_color)
+			health_col)
 		draw_rect(
 			Rect2(-bar_w / 2.0, bar_y, bar_w, bar_h),
 			Color(0.0, 0.0, 0.0, 0.5), false, 1.0)
 
 
 func get_health() -> float:
-	return current_health
+	if stats:
+		return stats.get_health()
+	return 0.0
 
 
 func is_alive() -> bool:
 	return not is_dead
-	
