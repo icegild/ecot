@@ -355,7 +355,10 @@ static func _add_to_scene(particles: GPUParticles2D) -> void:
         var tree := Engine.get_main_loop() as SceneTree
         if not tree or not tree.current_scene:
                 return
+        var target_pos: Vector2 = particles.position
         tree.current_scene.add_child(particles)
+        # Set global_position AFTER parenting so Godot converts coordinates
+        particles.global_position = target_pos
         # Auto-destroy after emission finishes
         var lt_val: float = particles.get_meta("vfx_lt")
         var lt_rand: float = particles.get_meta("vfx_lt_rand")
